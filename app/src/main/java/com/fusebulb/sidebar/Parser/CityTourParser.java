@@ -1,10 +1,15 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Parser;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Xml;
+
+import com.fusebulb.sidebar.Downloader;
+import com.fusebulb.sidebar.Tour;
+import com.fusebulb.sidebar.Adapter.TourCardAdapter;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -18,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by amiteshmaheshwari on 15/07/16.
  */
-public class CityTourParser  extends  Parser{
+public class CityTourParser  extends Parser {
 
     private static final String XML_TOUR_ID = "id";
     private static final String XML_TOUR_NAME = "name";
@@ -28,22 +33,23 @@ public class CityTourParser  extends  Parser{
     private static final String XML_TOUR_PRICE = "rate";
     private static final String XML_TOUR_SIZE = "size";
 
-    private static final String ATTRACTION_TOUR = "Attraction";
-    private static final String CITY_TOUR = "City Tour";
-
     private static final String TAG = "CityParser";
     private Context context;
+    private String langPref;
+    private MediaPlayer mediaPlayer;
     private Downloader downloader;
     private String tour_source;
     private RecyclerView tourRecyclerView;
     private ProgressDialog progDailog;
 
 
-    public CityTourParser(Context app_context, String tour_source_path, RecyclerView recyclerView){
+    public CityTourParser(Context app_context, String language, MediaPlayer mp, String tour_source_path, RecyclerView recyclerView){
         context = app_context;
         downloader = new Downloader(context);
         tour_source = tour_source_path;
         tourRecyclerView = recyclerView;
+        langPref = language;
+        mediaPlayer = mp;
     }
 
 
@@ -81,7 +87,7 @@ public class CityTourParser  extends  Parser{
     protected void onPostExecute(ArrayList result) {
         super.onPostExecute(result);
         progDailog.dismiss();
-        tourRecyclerView.setAdapter(new TourCardAdapter(context, result));
+        tourRecyclerView.setAdapter(new TourCardAdapter(context, langPref, mediaPlayer, result));
     }
 
     public ArrayList<Tour> parseCityTours(Context context, InputStream in) throws XmlPullParserException, IOException {
@@ -116,6 +122,7 @@ public class CityTourParser  extends  Parser{
         Tour tour= new Tour();
         tour.setId(parser.getAttributeValue(NS, XML_TOUR_ID));
         tour.setName(parser.getAttributeValue(NS, XML_TOUR_NAME));
+        tour.setTourType(parser.getAttributeValue(NS, XML_TOUR_TYPE));
 
         while (parser.next() != XmlPullParser.END_TAG){
             if(parser.getEventType() != XmlPullParser.START_TAG) {
@@ -134,9 +141,12 @@ public class CityTourParser  extends  Parser{
             } else if(tag.equals("price")){
                 tour.setPrice(Integer.parseInt(parser.getAttributeValue(NS, XML_TOUR_PRICE)));
                 parser.nextTag();
-            }
-            else if(tag.equals("clips")){
-                tour.setClipSource(readText(parser));
+            } else if(tag.equals("preview")){
+                String file_path = readText(parser);
+                tour.setPreviewSource(file_path);
+                downloader.getFile(file_path);
+            } else if(tag.equals("clips")){
+                tour.setTourSource(readText(parser));
             }
             else {
                 skip(parser);

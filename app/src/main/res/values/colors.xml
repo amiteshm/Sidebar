@@ -4,4 +4,13 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#C82506</color>
     <color name="btnText">#FFFFFF</color>
+
+    <color name="primary_text_color">#DF000000</color>
+    <color name="secondary_text_color">#8A000000</color>
+    <color name="icon_color">#61000000</color>
+    <color name="divider_color">#1F000000</color>
+    <color name="action_color">#C0000000</color>
+
+
+
 </resources>

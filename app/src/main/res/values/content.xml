@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string name="tour_price">%1$d ₹</string>
+    <string name="free_tour">Free</string>
+    <string name="en_coming_soon">Coming Soon</string>
+    <string name="hi_coming_soon">जल्द ही</string>
+
+    <string name="en_preview">Preview</string>
+    <string name="hi_preview">पूर्वदर्शन</string>
+
+    <string name="en_stop_player">Stop</string>
+    <string name="hi_stop_player">बंद करें</string>
+
+    <string name="en_direction">Direction</string>
+    <string name="hi_direction">दिशाएँ</string>
+
+    <plurals name="en_city_tour_tag">
+        <item quantity="one">%1$d Tour</item>
+        <item quantity="other">%1$d Tours</item>
+    </plurals>
+
+    <plurals name="hi_city_tour_tag">
+        <item quantity="one">%1$d टूर</item>
+        <item quantity="other">%1$d टूर्स </item>
+    </plurals>
+
+    <string name="en_tour_type_attraction">Attraction</string>
+    <string name="en_tour_type_city_tour">City Tour</string>
+
+    <string name="hi_tour_type_attraction">दर्शनीय स्थान</string>
+    <string name="hi_tour_type_city_tour">दौरा</string>
+</resources>

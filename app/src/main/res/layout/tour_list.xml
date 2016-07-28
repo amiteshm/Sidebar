@@ -1,34 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <android.support.v7.widget.CardView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        card_view:contentPadding="@dimen/activity_horizontal_margin"
-        card_view:cardUseCompatPadding="true"
-        card_view:cardPreventCornerOverlap="false"
-        card_view:cardCornerRadius="3dp">
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="8dp"
+        cardview:cardCornerRadius="2dp"
+        cardview:cardElevation="4dp"
+        cardview:cardUseCompatPadding="true">
 
-        <ImageView
-            android:id="@+id/tour_img_thumbnail"
-            android:layout_width="fill_parent"
-            android:layout_height="200dp" />
 
-        <TextView
-            android:id="@+id/tour_title"
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_gravity="bottom"
-            android:gravity="center_vertical"
-            android:background="#757575"
-            android:alpha="0.8"
-            android:textSize="@dimen/abc_text_size_headline_material"
-            android:text="Test"/>
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/tour_img_thumbnail"
+                android:layout_width="fill_parent"
+                android:layout_height="190dp"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/tour_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tour_img_thumbnail"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/primary_text_left_right_padding"
+                android:layout_marginTop="@dimen/primary_text_top_padding"
+                android:text="Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/primary_text_color"
+                android:textSize="@dimen/primary_text_size" />
+
+            <Button
+                android:id="@+id/tour_price_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tour_img_thumbnail"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/button_tag"
+                android:text="Free"
+                android:textColor="@color/secondary_text_color" />
+
+            <TextView
+                android:id="@+id/tour_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attraction"
+                android:textSize="@dimen/secondary_text_size"
+                android:layout_below="@id/tour_title"
+                android:paddingLeft="@dimen/secondary_text_right_left_padding" />
+
+            <Button
+                android:id="@+id/tour_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tour_type"
+                android:background="@drawable/border_less_btn"
+                android:drawableStart="@drawable/ic_direction"
+                android:drawableLeft="@drawable/ic_direction"
+                android:layout_marginLeft="16dp"
+                android:text="4 KMS"
+                android:textColor="@color/action_color"/>
+
+            <Button
+                android:id="@+id/tour_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/tour_distance"
+                android:layout_below="@id/tour_type"
+                android:background="@drawable/border_less_btn"
+                android:paddingLeft="8dp"
+                android:drawableStart="@drawable/ic_preview"
+                android:drawableLeft="@drawable/ic_preview"
+                android:drawablePadding="@dimen/action_padding"
+                android:layout_marginLeft="8dp"
+                android:text="Preview"
+                android:textColor="@color/action_color" />
+
+            <Button
+                android:id="@+id/tour_overview_arrow_down_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tour_type"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/action_padding"
+                android:background="@drawable/border_less_btn"
+                android:drawableRight="@drawable/ic_show_more_arrow" />
+
+            <Button
+                android:id="@+id/tour_overview_arrow_up_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tour_type"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/action_padding"
+                android:background="@drawable/border_less_btn"
+                android:drawableRight="@drawable/ic_show_less" />
+
+            <TextView
+                android:id="@+id/tour_overview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/secondary_text_size"
+                android:layout_below="@id/tour_preview"
+                android:paddingLeft="@dimen/secondary_text_right_left_padding"
+                android:paddingRight="@dimen/secondary_text_right_left_padding"
+                android:paddingBottom="@dimen/primary_text_top_padding"
+                />
+
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
+
 </LinearLayout>

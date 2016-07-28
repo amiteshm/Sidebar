@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout_playlist_right_play_tour"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fusebulb.sidebar.PlayTourActivity">
+
+    <!-- The main content view -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/frameLayout_audioController"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/linearLayout_buttons_play_tour_top" />
+
+        <!--<ImageView-->
+            <!--android:id="@+id/play_tour_background_image"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:alpha="@dimen/alpha_play_tour_background_image"-->
+            <!--android:contentDescription="@string/play_tour_background_image"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@mipmap/utah_mountain_1080x1920" />-->
+        <!--android:background="@color/translucent_black"-->
+
+        <LinearLayout
+            android:id="@+id/linearLayout_buttons_play_tour_top"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_buttons_play_tour_top"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/white"
+            android:elevation="@dimen/elevation_buttons_play_tour_top"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="3">
+            <!--android:background="#00ff00"-->
+
+            <ImageButton
+                style="@style/buttons_play_tour_top"
+                android:contentDescription="@string/locate"
+                android:src="@drawable/ic_place_icon" />
+
+            <ImageButton
+                style="@style/buttons_play_tour_top"
+                android:contentDescription="@string/camera"
+                android:src="@drawable/ic_menu_camera" />
+
+            <ImageButton
+                android:id="@+id/imageButton_playlist_play_tour"
+                style="@style/buttons_play_tour_top"
+                android:contentDescription="@string/list_of_places_of_interest"
+                android:src="@drawable/ic_playlist_play" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            >
+            <TextView
+                android:id="@+id/play_tour_subtitle_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hello world!!"
+                android:textSize="@dimen/primary_text_size"
+                android:paddingLeft="72dp"
+                android:paddingTop="120dp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/listView_rightDrawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="#fff"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
+</android.support.v4.widget.DrawerLayout>

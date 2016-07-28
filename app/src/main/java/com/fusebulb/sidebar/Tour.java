@@ -15,11 +15,12 @@ public class Tour {
     private String summary;
     private int city;
     private int price;
-    private String clip_source;
+    private String preview_source;
+    private String tour_source;
     private int tour_type;
 
-    private static final int ATTRACTION =100;
-    private static final int CITY_TOUR =200;
+    public static final int ATTRACTION = 100;
+    public static final int CITY_TOUR = 200;
 
     public Tour() {
 
@@ -41,6 +42,14 @@ public class Tour {
         this.id = Integer.parseInt(id);
     }
 
+    public String getPreviewSource(){
+        return this.preview_source;
+    }
+
+    public void setPreviewSource(String source){
+        this.preview_source = source;
+    }
+
     public void setPrice(int rate){
         this.price = rate;
     }
@@ -49,12 +58,12 @@ public class Tour {
         return this.price;
     }
 
-    public void setClipSource(String clipSource){
-        this.clip_source = clipSource;
+    public void setTourSource(String clipSource){
+        this.tour_source = clipSource;
     }
 
-    public String getClipSource(){
-        return this.clip_source;
+    public String getTourSource(){
+        return this.tour_source;
     }
 
     public void setId(int id){
@@ -128,5 +137,6 @@ public class Tour {
     public int getTourType(){
         return this.tour_type;
     }
+
 
 }

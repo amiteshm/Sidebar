@@ -13,6 +13,7 @@ public class City {
     private String name;
     private Location location;
     private File picture;
+    private int tour_size;
     private String tours_source;
 
 
@@ -28,6 +29,14 @@ public class City {
 //        this.location.setLongitude(lon);
 //        this.picture = photo_path;
 //    }
+
+    public void setTourSize(int size){
+        tour_size = size;
+    }
+
+    public int getTourSize(){
+        return this.tour_size;
+    }
 
     public void setCityTours(String file_path){
         tours_source = file_path;

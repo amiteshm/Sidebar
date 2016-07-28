@@ -1,4 +1,4 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Parser;
 
 import android.content.Context;
 import android.os.AsyncTask;

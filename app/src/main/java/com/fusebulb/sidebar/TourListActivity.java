@@ -1,28 +1,21 @@
 package com.fusebulb.sidebar;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 
+
+import com.fusebulb.sidebar.Parser.CityTourParser;
 /**
  * Created by amiteshmaheshwari on 15/07/16.
  */
 
-public class TourListActivity extends Activity implements NavigationView.OnNavigationItemSelectedListener{
+public class TourListActivity extends AppCompatActivity {
     private SharedPreference userSettings;
     private String userName;
     private String userLanguage;
@@ -35,12 +28,18 @@ public class TourListActivity extends Activity implements NavigationView.OnNavig
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_city_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.content_city);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.city_toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         //setSupportActionBar(toolbar);
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 //        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -55,17 +54,17 @@ public class TourListActivity extends Activity implements NavigationView.OnNavig
 
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View hView =  navigationView.getHeaderView(0);
-        TextView nav_user = (TextView)hView.findViewById(R.id.user_name);
-        nav_user.setText(userName);
-        navigationView.setNavigationItemSelectedListener(this);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
+//
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        View hView =  navigationView.getHeaderView(0);
+//        TextView nav_user = (TextView)hView.findViewById(R.id.user_name);
+//        nav_user.setText(userName);
+//        navigationView.setNavigationItemSelectedListener(this);
         // MENU END
 
         RecyclerView cityRecyclerView;
@@ -79,27 +78,18 @@ public class TourListActivity extends Activity implements NavigationView.OnNavig
         if (extras != null) {
             tour_source = extras.getString("TOURS_SOURCE");
             //The key argument here must match that used in the other activity
-            CityTourParser cityTourParser = new CityTourParser(this, tour_source, cityRecyclerView);
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            CityTourParser cityTourParser = new CityTourParser(this, userLanguage, mediaPlayer, tour_source, cityRecyclerView);
             cityTourParser.execute();
         }
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -108,40 +98,20 @@ public class TourListActivity extends Activity implements NavigationView.OnNavig
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_settings){
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+        if (id == android.R.id.home){
+//            Intent intent = new Intent(this, MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
+            onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_name || id == R.id.nav_language) {
-            Intent userSettingIntent= new Intent(this, UserSettings.class);
-            startActivity(userSettingIntent);
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public String getUserLanguagePref(){
+        return userSettings.getUserLanguage(this);
     }
-
 
 
 }

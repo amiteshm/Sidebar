@@ -1,11 +1,14 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Parser;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Xml;
+
+import com.fusebulb.sidebar.City;
+import com.fusebulb.sidebar.Adapter.CityCardAdapter;
+import com.fusebulb.sidebar.Downloader;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -15,7 +18,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by amiteshmaheshwari on 14/07/16.
@@ -27,6 +29,7 @@ public class CityParser extends Parser {
     private static final String XML_CITY_NAME = "name";
     private static final String XML_CITY_LON =  "lon";
     private static final String XML_CITY_LAT =  "lat";
+    private static final String XML_CITY_SIZE = "size";
 
     private static final String TAG = "CityParser";
     private Context context;
@@ -34,7 +37,6 @@ public class CityParser extends Parser {
     private String language_pref;
     RecyclerView cityRecyclerView;
     ProgressDialog progDailog;
-
 
     public CityParser(Context app_context, String language, RecyclerView recyclerView){
         context = app_context;
@@ -79,7 +81,7 @@ public class CityParser extends Parser {
     protected void onPostExecute(ArrayList result) {
         super.onPostExecute(result);
         progDailog.dismiss();
-        cityRecyclerView.setAdapter(new CityCardAdapter(context, result));
+        cityRecyclerView.setAdapter(new CityCardAdapter(context, language_pref, result));
     }
 
     public ArrayList<City> parseCities(Context context, InputStream in) throws XmlPullParserException, IOException {
@@ -94,7 +96,6 @@ public class CityParser extends Parser {
         ArrayList<City> cityList = new ArrayList<City>();
         parser.require(XmlPullParser.START_TAG, NS, "tour_info");
         while (parser.next() != XmlPullParser.END_TAG) {
-
             if(parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
@@ -109,12 +110,10 @@ public class CityParser extends Parser {
     }
 
     public City readCity(XmlPullParser parser) throws XmlPullParserException, IOException {
-
         parser.require(XmlPullParser.START_TAG, NS, "city");
         City city = new City();
         city.setId(parser.getAttributeValue(NS, XML_CITY_ID));
         city.setName(parser.getAttributeValue(NS, XML_CITY_NAME));
-
         while (parser.next() != XmlPullParser.END_TAG){
             if(parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -128,6 +127,7 @@ public class CityParser extends Parser {
                 String file_path = readText(parser);
                 city.setPicture(downloader.getFile(file_path));
             } else if (tag.equals("tours")){
+                city.setTourSize(Integer.parseInt(parser.getAttributeValue(NS, XML_CITY_SIZE)));
                 city.setCityTours(readText(parser));
             } else {
                 skip(parser);

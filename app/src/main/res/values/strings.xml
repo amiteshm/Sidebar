@@ -11,4 +11,18 @@
     <string name="english">English</string>
     <string name="hindi">Hindi</string>
 
+
+
+
+    <string name="locate">locate</string>
+    <string name="camera">camera</string>
+    <string name="list_of_places_of_interest">list of places of interest</string>
+    <string name="play_tour_background_image">play_tour_background_image</string>
+
+
+    <string name="play">play</string>
+    <string name="pause">pause</string>
+    <string name="close_tour">close tour</string>
+    <string name="fast_forward">fast_forward</string>
+    <string name="rewind">rewind</string>
 </resources>

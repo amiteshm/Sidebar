@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/view_tour_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/secondary_text_right_left_padding"
+        android:paddingRight="@dimen/secondary_text_right_left_padding"
+        android:paddingTop="@dimen/primary_text_top_padding"
+        android:text="Qutub Minar"
+        android:textColor="@color/primary_text_color"
+        android:textSize="@dimen/primary_text_size" />
+
+    <TextView
+        android:id="@+id/view_tour_city_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/secondary_text_bottom_padding"
+        android:paddingLeft="@dimen/secondary_text_right_left_padding"
+        android:paddingRight="@dimen/secondary_text_right_left_padding"
+        android:text="Delhi"
+        android:textColor="@color/secondary_text_color"
+        android:textSize="@dimen/secondary_text_size" />
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+        <RelativeLayout
+            android:id="@+id/view_tour_location_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/view_tour_location_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingTop="6dp"
+                android:src="@drawable/ic_place_icon" />
+
+            <TextView
+                android:id="@+id/view_tour_location_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/view_tour_location_icon"
+                android:paddingLeft="@dimen/secondary_text_right_left_padding"
+                android:text="Location"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="@dimen/secondary_text_size" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_tour_location_label"
+                android:layout_toRightOf="@id/view_tour_location_icon"
+                android:paddingLeft="@dimen/secondary_text_right_left_padding"
+                android:text="5 kms"
+                android:textColor="@color/primary_text_color"
+                android:textSize="@dimen/secondary_text_size" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/view_tour_time_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/view_tour_location_info"
+            android:paddingLeft="16dp">
+
+            <ImageView
+                android:id="@+id/view_tour_time_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingTop="6dp"
+                android:src="@drawable/ic_timer_icon" />
+
+            <TextView
+                android:id="@+id/view_tour_duration_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/view_tour_time_icon"
+                android:paddingLeft="@dimen/secondary_text_right_left_padding"
+                android:text="Duration"
+                android:textColor="@color/secondary_text_color"
+                android:textSize="@dimen/secondary_text_size" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_tour_duration_label"
+                android:layout_toRightOf="@id/view_tour_time_icon"
+                android:paddingLeft="@dimen/secondary_text_right_left_padding"
+                android:text="1 hour"
+                android:textColor="@color/primary_text_color"
+                android:textSize="@dimen/secondary_text_size" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_tour_listen_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        >
+        <ImageView
+            android:id="@+id/view_tour_listen_preview_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_preview"
+            android:paddingLeft="16dp"
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Listen to preview"
+            android:paddingTop="4dp"
+            android:textSize="@dimen/secondary_text_size"
+            android:paddingLeft="8dp"
+            android:layout_toRightOf="@id/view_tour_listen_preview_icon"
+            />
+    </RelativeLayout>
+
+
+
+</LinearLayout>

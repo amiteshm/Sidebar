@@ -30,7 +30,7 @@ public class Downloader {
 
     public Downloader(Context context){
         this.context = context;
-        APP_FOLDER = context.getCacheDir().toString()+"/";
+        APP_FOLDER = context.getFilesDir().toString()+"/";
     }
 
     public static File getFile(String file_path) {
