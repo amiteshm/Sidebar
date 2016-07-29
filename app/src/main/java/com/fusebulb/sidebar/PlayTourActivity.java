@@ -4,20 +4,25 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.TimedText;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MediaController.MediaPlayerControl;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Handler;
@@ -39,7 +44,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by amiteshmaheshwari on 24/07/16.
  */
-public class PlayTourActivity extends AppCompatActivity implements  View.OnClickListener, AdapterView.OnItemClickListener, MediaPlayer.OnTimedTextListener {
+public class PlayTourActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, MediaPlayer.OnTimedTextListener {
 
     private static final String TAG = "PlayTourActivity";
 
@@ -54,13 +59,20 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
     private AudioController audioController;
     private static Handler handler = new Handler();
     private TextView subtitlesView;
+    private ImageView pictureInFocus;
+    private ActionListener actionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_tour);
 
-        subtitlesView = (TextView)findViewById(R.id.play_tour_subtitle_box);
+
+        actionListener = new ActionListener();
+        subtitlesView = (TextView) findViewById(R.id.play_tour_subtitle_box);
+        subtitlesView.setVisibility(View.GONE);
+        pictureInFocus = (ImageView) findViewById(R.id.play_tour_picture_in_focus);
+
 
         Bundle extras = getIntent().getExtras();
         String tourSourcePath = "";
@@ -87,7 +99,7 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
         }
     }
 
-    public void clipPickedInDrawer(View view){
+    public void clipPickedInDrawer(View view) {
         setClipIndex(Integer.parseInt(view.getTag().toString()));
         playClip();
 
@@ -134,39 +146,20 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
         }
     };
 
-    private String getAppFolder(){
-        return getFilesDir().toString()+"/";
+    private String getAppFolder() {
+        return getFilesDir().toString() + "/";
     }
 
-    private void setClipIndex(int clipIndex){
+    private void setClipIndex(int clipIndex) {
         // download the clip file and action files
         // show loading & change the ply
-        playTourService.setClipIndex(clipIndex);
-        Clip clip = clipList.get(clipIndex);
-        File actionFile = new File(getFilesDir(), clip.getActionFileSource());
-        setSubTitles(playTourService.getMediaPlayer(), actionFile);
+        Clip clip = playTourService.setClipIndex(clipIndex);
 
-    }
+        setPictureInFocus(clip.getPictureSource());
 
+        playTourService.getMediaPlayer().setOnTimedTextListener(this);
+        //setSubTitles(playTourService.getMediaPlayer(), actionFile);
 
-
-    private void setSubTitles(MediaPlayer player, File file){
-        try {
-            player.addTimedTextSource(getSubtitleFile(R.raw.sub),
-                    MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
-
-            //player.addTimedTextSource(file.getAbsolutePath(), MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
-            int textTrackIndex = findTrackIndexFor(
-                    MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT, player.getTrackInfo());
-            if (textTrackIndex >= 0) {
-                player.selectTrack(textTrackIndex);
-            } else {
-                Log.w(TAG, "Cannot find text track!");
-            }
-            player.setOnTimedTextListener(PlayTourActivity.this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private int findTrackIndexFor(int mediaTrackType, MediaPlayer.TrackInfo[] trackInfo) {
@@ -180,15 +173,18 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
     }
 
 
-
     @Override
-    public void onTimedText(final MediaPlayer mp, final TimedText text) {
-        Log.e("PlayTourActivity", text.getText());
-        if (text != null) {
+    public void onTimedText(final MediaPlayer mp, final TimedText timedText) {
+        if (timedText != null) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    subtitlesView.setText(text.getText());
+                    String text = timedText.getText();
+                    String[] components = text.split("##");
+
+                    subtitlesView.setText(text);
+                    subtitlesView.setVisibility(View.VISIBLE);
+                    pictureInFocus.setImageAlpha(50);
                 }
             });
         }
@@ -204,31 +200,7 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //paused = true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        if (paused){
-//            setController();
-//            paused = false;
-//        }
-    }
-
-    @Override
-    protected void onStop() {
-        //controller.hide();
-        super.onStop();
-    }
-
-    //Mediaplayer methods
-
-
-    public boolean isClipPlaying(){
+    public boolean isClipPlaying() {
         return playTourService.isPlayerPlaying();
     }
 
@@ -238,14 +210,14 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
         //setClipDefaultPictures
     }
 
-    public void stopClip(){
+    public void stopClip() {
         playTourService.stopClip();
         onBackPressed();
     }
 
 
-    private void setPicture(String source){
-    //todo
+    private void setPicture(String source) {
+        //todo
     }
 
     public void pauseClip() {
@@ -253,15 +225,14 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
         playTourService.pauseClip();
     }
 
-    public void fastForwardClip(){
+    public void fastForwardClip() {
         playTourService.fastForwardPlayer();
 
     }
 
-    public void rewindClip(){
+    public void rewindClip() {
         playTourService.rewindPlayer();
     }
-
 
 
     // PlayTour UI Elements
@@ -278,7 +249,7 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
 
         if (listViewDrawer != null) {
 
-            ClipListAdapter clipListAdapter= new ClipListAdapter(this, clipList);
+            ClipListAdapter clipListAdapter = new ClipListAdapter(this, clipList);
             listViewDrawer.setAdapter(clipListAdapter);
             listViewDrawer.setOnItemClickListener(this);
         }
@@ -327,7 +298,7 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
 
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         unbindService(mediaPlayerConnection);
         //stopService(playIntent);
         playTourService = null;
@@ -337,7 +308,6 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
     private String getSubtitleFile(int resId) {
         String fileName = getResources().getResourceEntryName(resId);
         File subtitleFile = getFileStreamPath(fileName);
-
 
 
         if (subtitleFile.exists()) {
@@ -362,6 +332,7 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
         }
         return "";
     }
+
     private void copyFile(InputStream inputStream, OutputStream outputStream)
             throws IOException {
         final int BUFFER_SIZE = 1024;
@@ -388,6 +359,10 @@ public class PlayTourActivity extends AppCompatActivity implements  View.OnClick
     }
 
 
+    public void setPictureInFocus(String picturePath) {
+        File pictureFile = new File(getAppFolder(), picturePath);
+        Bitmap pictureBitmap = BitmapFactory.decodeFile(pictureFile.getAbsolutePath());
 
-
+        pictureInFocus.setImageBitmap(pictureBitmap);
+    }
 }

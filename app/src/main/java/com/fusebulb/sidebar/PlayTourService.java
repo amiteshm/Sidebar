@@ -51,8 +51,6 @@ public class PlayTourService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate(); //create the service
-        clipPlayer = new MediaPlayer();
-        initClipPlayer();
     }
 
     @Override
@@ -102,40 +100,53 @@ public class PlayTourService extends Service implements
         isPaused = true;
     }
 
-    public void prepareClip() {
-
-        clipPlayer.reset();
+    public Clip prepareClip() {
+        initClipPlayer();
         currentClip = clipList.get(currentClipIndex);
 
         try {
             File clipFile = new File(APP_FOLDER, currentClip.getClipSource());
             File actionFile = new File(APP_FOLDER, currentClip.getActionFileSource());
 
-            //prepareClipActionFiles(currentClip);
 
             Uri trackUri = Uri.fromFile(clipFile);
             clipPlayer.setDataSource(getApplicationContext(), trackUri);
             clipPlayer.prepare();
-            //setActionFile(actionFile);
+            setSubTitles(clipPlayer, actionFile);
         } catch (Exception e) {
             Log.e("Music Service", "Error setting data source", e);
         }
+        return currentClip;
     }
 
-    public void setClipIndex(int clipIndex) {
+    private void setSubTitles(MediaPlayer player, File file){
+        try {
+            player.addTimedTextSource(file.getAbsolutePath(),
+                    MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
+
+            //player.addTimedTextSource(file.getAbsolutePath(), MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
+            int textTrackIndex = findTrackIndexFor(
+                    MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT, player.getTrackInfo());
+            if (textTrackIndex >= 0) {
+                player.selectTrack(textTrackIndex);
+            } else {
+                Log.w("PlayTourService", "Cannot find text track!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public Clip setClipIndex(int clipIndex) {
         this.currentClipIndex = clipIndex;
-        prepareClip();
+        return prepareClip();
     }
 
     public void setClipList(ArrayList<Clip> list) {
         this.clipList = list;
     }
-
-//    @Override
-//    public void onTimedText(MediaPlayer mediaPlayer, TimedText timedText) {
-//        isPaused = true;
-//        Toast.makeText(context, timedText.getText(), Toast.LENGTH_LONG).show();
-//    }
 
     public class ClipPlayerBinder extends Binder {
         PlayTourService getService() {
@@ -144,7 +155,13 @@ public class PlayTourService extends Service implements
     }
 
     public void initClipPlayer() {
-        //set player properties
+
+        if(clipPlayer != null){
+            clipPlayer.release();
+        }
+
+        clipPlayer = new MediaPlayer();
+
         clipPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         clipPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         //clipPlayer.setOnPreparedListener(this);

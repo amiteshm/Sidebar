@@ -57,20 +57,27 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             >
+
+            <ImageView
+                android:id="@+id/play_tour_picture_in_focus"
+                android:layout_marginTop="56dp"
+                android:layout_marginBottom="80dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
             <TextView
                 android:id="@+id/play_tour_subtitle_box"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello world!!"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
                 android:textSize="@dimen/primary_text_size"
-                android:paddingLeft="72dp"
-                android:paddingTop="120dp"/>
+                android:paddingTop="120dp"
+                />
 
-        </LinearLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
     <!-- The navigation drawer -->
