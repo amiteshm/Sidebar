@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
@@ -23,6 +24,8 @@ import com.fusebulb.sidebar.PlayTourActivity;
 import com.fusebulb.sidebar.R;
 import com.fusebulb.sidebar.Tour;
 import com.fusebulb.sidebar.UserSettings;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +44,6 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
     private Resources resources;
     private TourPreviewPlayer previewPlayer;
     private FileDownloader downloader;
-    //private HashMap<String, String> previewSourceHash;
 
     public TourCardAdapter(Context context, String language_pref, MediaPlayer mp, List<Tour> tourList) {
         this.context = context;
@@ -49,7 +51,6 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
         this.languagePref = language_pref;
         this.resources = context.getResources();
         this.previewPlayer = new TourPreviewPlayer();
-        //this.previewSourceHash = new HashMap<String, String>();
         downloader = new FileDownloader(context);
     }
 
@@ -64,7 +65,6 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Tour tour = tourList.get(position);
-        //previewSourceHash.put(tour.getName(), tour.getPreviewSource());
         holder.titleView.setText(tour.getName());
         holder.thumbnailImage.setImageURI(Uri.fromFile(tour.getPicture()));
         holder.tourTypeView.setText(getTourTypeString(tour, languagePref));
@@ -74,6 +74,7 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
         holder.tourOverView.setVisibility(View.GONE);
         holder.tourHideOverViewBtn.setVisibility(View.GONE);
         holder.tourOverView.setText(tour.getSummary());
+
 
         holder.tourPreview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,25 +104,19 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
         });
 
 
-        holder.tourDirection.setOnClickListener(new View.OnClickListener(){
+        holder.tourDirection.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?&daddr=%f,%f (%s)", tour.getLocation().getLatitude(), tour.getLocation().getLongitude(), tour.getName());
+            public void onClick(View view) {
+                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?&daddr=%f,%f (%s)", tour.getLocation().getLongitude(), tour.getLocation().getLatitude(), tour.getName());
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                try
-                {
+                try {
                     context.startActivity(intent);
-                }
-                catch(ActivityNotFoundException ex)
-                {
-                    try
-                    {
+                } catch (ActivityNotFoundException ex) {
+                    try {
                         Intent unrestrictedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                         context.startActivity(unrestrictedIntent);
-                    }
-                    catch(ActivityNotFoundException innerEx)
-                    {
+                    } catch (ActivityNotFoundException innerEx) {
                         Toast.makeText(context, "Please install a maps application", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -185,8 +180,8 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
             tourShowOverViewBtn = (Button) view.findViewById(R.id.tour_overview_arrow_down_btn);
             tourHideOverViewBtn = (Button) view.findViewById(R.id.tour_overview_arrow_up_btn);
 
-            tourOverView = (TextView) view.findViewById(R.id.tour_overview);
-            tourOverView.setVisibility(View.GONE);
+            tourOverView = (TextView) view.findViewById(R.id.tour_overview_text);
+            //tourOverView.setVisibility(View.GONE);
             tourHideOverViewBtn.setVisibility(View.GONE);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -194,10 +189,6 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     Tour tour = tourList.get(pos);
-
-                    //Intent intent = new Intent(context, TourShowActivity.class);
-                    //intent.putExtra("TOURS_SOURCE", "");
-
                     Intent intent = new Intent(context, PlayTourActivity.class);
                     intent.putExtra("TOUR_SOURCE", tour.getTourSource());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -240,12 +231,12 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
     }
 
 
-    public static void expand(final View v) {
+    public static void expand(final TextView v) {
         v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         final int targetHeight = v.getMeasuredHeight();
 
-        v.getLayoutParams().height = 0;
         v.setVisibility(View.VISIBLE);
+
         Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
@@ -318,7 +309,7 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
         private void playOrStopPreviewFor(Button view, File file) {
             boolean play = view != currentView;
             stopCurrentPreview();
-            if(play){
+            if (play) {
                 setCurrentView(view);
                 MediaPlayer mp = getMediaPlayer();
                 try {

@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.TimedText;
@@ -169,32 +170,15 @@ public class PlayTourService extends Service implements
         clipPlayer.setOnErrorListener(this);
     }
 
+    public Location getCurrentClipLocation(){
+        return currentClip.getLocation();
+    }
+
     @Override
     public void onDestroy() {
         stopForeground(true);
     }
 
-//    @Override
-//    public void onPrepared(MediaPlayer mediaPlayer) {
-        //mediaPlayer.start();
-//        if (!audioFocusGranted) {
-//            requestAudioFocus();
-//        }
-//        mediaPlayer.start();
-//        Intent notIntent = new Intent(this, PlayTourActivity.class);
-//        notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        PendingIntent pendInt = PendingIntent.getActivity(this, 0, notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//        Notification.Builder builder = new Notification.Builder(this);
-//        builder.setContentIntent(pendInt)
-//                .setSmallIcon(R.drawable.ic_preview)
-//                .setTicker(currentClip.getName())
-//                .setOngoing(true)
-//                .setContentTitle("Playing")
-//                .setContentText(currentClip.getName());
-//        Notification not = builder.build();
-//        startForeground(NOTIFY_ID, not);
-// }
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {

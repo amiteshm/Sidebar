@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.media.MediaPlayer;
 import android.media.TimedText;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -59,8 +61,8 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     private AudioController audioController;
     private static Handler handler = new Handler();
     private TextView subtitlesView;
-    private ImageView pictureInFocus;
-    private ActionListener actionListener;
+    private ImageView pictureInFocus, cameraBtn, mapBtn;
+    private static final String ACTION_SPLITTER = "##";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +70,16 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_play_tour);
 
 
-        actionListener = new ActionListener();
+        //actionListener = new ActionListener();
         subtitlesView = (TextView) findViewById(R.id.play_tour_subtitle_box);
         subtitlesView.setVisibility(View.GONE);
         pictureInFocus = (ImageView) findViewById(R.id.play_tour_picture_in_focus);
+
+        cameraBtn = (ImageView) findViewById(R.id.play_tour_openCamera_btn);
+        cameraBtn.setOnClickListener(this);
+
+        mapBtn = (ImageView) findViewById(R.id.play_tour_openMap_btn);
+        mapBtn.setOnClickListener(this);
 
 
         Bundle extras = getIntent().getExtras();
@@ -91,6 +99,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
             clipList = clipParser.get();
             initializeView();
             openAudioControllerFragment();
+
             //songView.setAdapter(songAdpater);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -105,16 +114,6 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    private void prepareClipActionFiles(Clip clip) {
-        downloadFile(clip.getPictureSource());
-        ArrayList<ClipAction> clipActions = clip.getClipActions();
-        for (ClipAction clipAction : clipActions) {
-            if (clipAction.getActionType().equals(ClipAction.MediaClipAction)) {
-                File mediaFile = downloadFile(((MediaClipAction) clipAction).getMediaSource());
-                ((MediaClipAction) clipAction).setMediaFile(mediaFile);
-            }
-        }
-    }
 
     private File downloadFile(String file_path) {
         File file = null;
@@ -180,16 +179,32 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void run() {
                     String text = timedText.getText();
-                    String[] components = text.split("##");
+                    String[] components = text.split(ACTION_SPLITTER);
 
-                    subtitlesView.setText(text);
-                    subtitlesView.setVisibility(View.VISIBLE);
-                    pictureInFocus.setImageAlpha(50);
+                    String action = components[0];
+                    switch (action){
+                        case "Media":
+                            setPictureInFocus(components[1]);
+                            break;
+                        case "Map":
+                            setActionText(components[1]);
+                            break;
+                        case "Camera":
+                            setActionText(components[1]);
+                            break;
+
+                    }
+
                 }
             });
         }
     }
 
+    public void setActionText(String text){
+        subtitlesView.setText(text);
+        subtitlesView.setVisibility(View.VISIBLE);
+        pictureInFocus.setImageAlpha(50);
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -263,6 +278,17 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
                     drawerLayoutPlayList.openDrawer(GravityCompat.END);
                 }
                 break;
+            case R.id.play_tour_openCamera_btn:
+                startActivity(new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE));
+                break;
+            case R.id.play_tour_openMap_btn:
+                Location loc = playTourService.getCurrentClipLocation();
+                String query= "http://maps.google.com/maps?daddr="+loc.getLongitude()+","+loc.getLatitude();
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse(query));
+                startActivity(intent);
+
+                break;
         }
     }
 
@@ -300,69 +326,16 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         unbindService(mediaPlayerConnection);
-        //stopService(playIntent);
+        stopService(playIntent);
         playTourService = null;
         super.onDestroy();
-    }
-
-    private String getSubtitleFile(int resId) {
-        String fileName = getResources().getResourceEntryName(resId);
-        File subtitleFile = getFileStreamPath(fileName);
-
-
-        if (subtitleFile.exists()) {
-            Log.d(TAG, "Subtitle already exists");
-            return subtitleFile.getAbsolutePath();
-        }
-        Log.d(TAG, "Subtitle does not exists, copy it from res/raw");
-
-        // Copy the file from the res/raw folder to your app folder on the
-        // device
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-        try {
-            inputStream = getResources().openRawResource(resId);
-            outputStream = new FileOutputStream(subtitleFile, false);
-            copyFile(inputStream, outputStream);
-            return subtitleFile.getAbsolutePath();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeStreams(inputStream, outputStream);
-        }
-        return "";
-    }
-
-    private void copyFile(InputStream inputStream, OutputStream outputStream)
-            throws IOException {
-        final int BUFFER_SIZE = 1024;
-        byte[] buffer = new byte[BUFFER_SIZE];
-        int length = -1;
-        while ((length = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, length);
-        }
-    }
-
-    // A handy method I use to close all the streams
-    private void closeStreams(Closeable... closeables) {
-        if (closeables != null) {
-            for (Closeable stream : closeables) {
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
     }
 
 
     public void setPictureInFocus(String picturePath) {
         File pictureFile = new File(getAppFolder(), picturePath);
-        Bitmap pictureBitmap = BitmapFactory.decodeFile(pictureFile.getAbsolutePath());
+        Log.d(TAG, pictureFile.getAbsolutePath() + " is exists?: " + pictureFile.exists());
+        pictureInFocus.setImageURI(Uri.fromFile(pictureFile));
 
-        pictureInFocus.setImageBitmap(pictureBitmap);
     }
 }

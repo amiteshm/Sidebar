@@ -28,6 +28,7 @@ public class Downloader {
     public static String APP_FOLDER = "";
     private Context context;
 
+
     public Downloader(Context context){
         this.context = context;
         APP_FOLDER = context.getFilesDir().toString()+"/";

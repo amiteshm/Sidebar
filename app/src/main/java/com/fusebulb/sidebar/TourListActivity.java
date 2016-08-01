@@ -35,37 +35,7 @@ public class TourListActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        //setSupportActionBar(toolbar);
-
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(TourListActivity.this, MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent);
-//            }
-//        });
-
-        // MENU START
-
-
-
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-//
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        View hView =  navigationView.getHeaderView(0);
-//        TextView nav_user = (TextView)hView.findViewById(R.id.user_name);
-//        nav_user.setText(userName);
-//        navigationView.setNavigationItemSelectedListener(this);
-        // MENU END
 
         RecyclerView cityRecyclerView;
         cityRecyclerView = (RecyclerView)findViewById(R.id.tour_list_view);
@@ -83,6 +53,7 @@ public class TourListActivity extends AppCompatActivity {
             cityTourParser.execute();
         }
     }
+
 
     @Override
     public void onBackPressed() {

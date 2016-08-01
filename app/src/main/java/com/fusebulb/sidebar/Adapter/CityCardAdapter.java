@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.fusebulb.sidebar.City;
 import com.fusebulb.sidebar.R;
@@ -19,10 +20,11 @@ import com.fusebulb.sidebar.UserSettings;
 
 import java.util.List;
 
+
 /**
  * Created by amiteshmaheshwari on 14/07/16.
  */
-public class CityCardAdapter extends RecyclerView.Adapter<CityCardAdapter.ViewHolder> {
+public class CityCardAdapter extends RecyclerView.Adapter<CityCardAdapter.ViewHolder>  {
 
     private Context context;
     private List<City> cityList;
@@ -45,11 +47,19 @@ public class CityCardAdapter extends RecyclerView.Adapter<CityCardAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         City city = cityList.get(position);
         holder.titleView.setText(city.getName());
         holder.buttonTag.setText(getTourInfoTag(city, context));
         holder.thumbnailImage.setImageURI(Uri.fromFile(city.getPicture()));
+
+        holder.buttonTag.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                showToursLink(position);
+            }
+        });
     }
 
     public String getTourInfoTag(City city, Context context){
@@ -78,6 +88,7 @@ public class CityCardAdapter extends RecyclerView.Adapter<CityCardAdapter.ViewHo
         return cityList.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView thumbnailImage;
         public TextView titleView;
@@ -92,12 +103,21 @@ public class CityCardAdapter extends RecyclerView.Adapter<CityCardAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
-                    City city = cityList.get(pos);
-                    Intent intent = new Intent(context, TourListActivity.class);
-                    intent.putExtra("TOURS_SOURCE", city.getCityTours());
-                    context.startActivity(intent);
+                    showToursLink(pos);
+
                 }
             });
+        }
+    }
+
+    private void showToursLink(int position){
+        City city = cityList.get(position);
+        if(city.getTourSize() != 0){
+            Intent intent = new Intent(context, TourListActivity.class);
+            intent.putExtra("TOURS_SOURCE", city.getCityTours());
+            context.startActivity(intent);
+        } else{
+            Toast.makeText(context, getTourInfoTag(city, context), Toast.LENGTH_LONG).show();
         }
     }
 }

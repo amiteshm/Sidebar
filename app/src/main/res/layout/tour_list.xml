@@ -9,7 +9,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
         cardview:cardCornerRadius="2dp"
@@ -109,7 +109,7 @@
                 android:drawableRight="@drawable/ic_show_less" />
 
             <TextView
-                android:id="@+id/tour_overview"
+                android:id="@+id/tour_overview_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/secondary_text_size"

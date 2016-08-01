@@ -43,29 +43,30 @@
             android:minHeight="0dp"
             android:minWidth="0dp" />
 
-        <!--<ImageView-->
-            <!--android:id="@+id/audioController_rewind"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="-70dp"-->
-            <!--android:layout_marginStart="-70dp"-->
-            <!--android:background="@drawable/rewind_btn"-->
-            <!--android:contentDescription="@string/rewind"-->
-            <!--android:minHeight="0dp"-->
-            <!--android:minWidth="0dp" />-->
 
         <!--<ImageView-->
-            <!--android:id="@+id/audioController_fast_forward"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="160dp"-->
-            <!--android:layout_marginStart="160dp"-->
-            <!--android:background="@drawable/fastforword_btn"-->
-            <!--android:contentDescription="@string/fast_forward"-->
-            <!--android:minHeight="0dp"-->
-            <!--android:minWidth="0dp" />-->
+        <!--android:id="@+id/audioController_rewind"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="-70dp"-->
+        <!--android:layout_marginStart="-70dp"-->
+        <!--android:background="@drawable/rewind_btn"-->
+        <!--android:contentDescription="@string/rewind"-->
+        <!--android:minHeight="0dp"-->
+        <!--android:minWidth="0dp" />-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/audioController_fast_forward"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="160dp"-->
+        <!--android:layout_marginStart="160dp"-->
+        <!--android:background="@drawable/fastforword_btn"-->
+        <!--android:contentDescription="@string/fast_forward"-->
+        <!--android:minHeight="0dp"-->
+        <!--android:minWidth="0dp" />-->
     </RelativeLayout>
 
 </RelativeLayout>

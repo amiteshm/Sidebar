@@ -11,11 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/frameLayout_audioController"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/linearLayout_buttons_play_tour_top" />
 
         <!--<ImageView-->
             <!--android:id="@+id/play_tour_background_image"-->
@@ -25,7 +20,7 @@
             <!--android:contentDescription="@string/play_tour_background_image"-->
             <!--android:scaleType="centerCrop"-->
             <!--android:src="@mipmap/utah_mountain_1080x1920" />-->
-        <!--android:background="@color/translucent_black"-->
+
 
         <LinearLayout
             android:id="@+id/linearLayout_buttons_play_tour_top"
@@ -40,11 +35,13 @@
             <!--android:background="#00ff00"-->
 
             <ImageButton
+                android:id="@+id/play_tour_openMap_btn"
                 style="@style/buttons_play_tour_top"
                 android:contentDescription="@string/locate"
                 android:src="@drawable/ic_place_icon" />
 
             <ImageButton
+                android:id="@+id/play_tour_openCamera_btn"
                 style="@style/buttons_play_tour_top"
                 android:contentDescription="@string/camera"
                 android:src="@drawable/ic_menu_camera" />
@@ -64,8 +61,7 @@
 
             <ImageView
                 android:id="@+id/play_tour_picture_in_focus"
-                android:layout_marginTop="56dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="72dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
             <TextView
@@ -78,6 +74,14 @@
                 />
 
         </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout_audioController"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+             />
+
     </RelativeLayout>
 
     <!-- The navigation drawer -->
