@@ -1,16 +1,12 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Helpers;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import org.xmlpull.v1.XmlPullParserException;
+import com.fusebulb.sidebar.Helpers.Downloader;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by amiteshmaheshwari on 20/07/16.

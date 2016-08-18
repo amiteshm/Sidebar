@@ -23,8 +23,8 @@
 
     <dimen name="buttons_play_tour_top_padding">10dp</dimen>
     <dimen name="elevation_buttons_play_tour_top">7dp</dimen>
-    <dimen name="height_buttons_play_tour_top">56dp</dimen>
-    <dimen name="height_width_circular_button">56dp</dimen>
+    <dimen name="btn_size_regular">56dp</dimen>
+    <dimen name="btn_size_small">40dp</dimen>
     <dimen name="marginBetween_playAndCloseTourButton">100dp</dimen>
     <dimen name="height_width_small_circular_button">36dp</dimen>
     <item  name="alpha_play_tour_background_image" format="float" type="dimen">0.7</item>

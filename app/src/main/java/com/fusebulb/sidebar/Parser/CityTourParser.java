@@ -7,8 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Xml;
 
-import com.fusebulb.sidebar.Downloader;
-import com.fusebulb.sidebar.Tour;
+import com.fusebulb.sidebar.Helpers.Downloader;
+import com.fusebulb.sidebar.Helpers.NetworkHelper;
+import com.fusebulb.sidebar.Models.Tour;
 import com.fusebulb.sidebar.Adapter.TourCardAdapter;
 
 import org.xmlpull.v1.XmlPullParser;

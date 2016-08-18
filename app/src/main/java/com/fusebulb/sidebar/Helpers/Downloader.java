@@ -1,8 +1,11 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Helpers;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,12 +29,18 @@ public class Downloader {
     private static final String TAG = "Downloader";
     public static final String HOST_NAME = "http://phitoor.com/fusebulb/";
     public static String APP_FOLDER = "";
-    private Context context;
+    private static Context context;
+    private static NetworkHelper networkHelper;
 
 
-    public Downloader(Context context){
-        this.context = context;
-        APP_FOLDER = context.getFilesDir().toString()+"/";
+    public Downloader(Context mContext){
+        this.context = mContext;
+        this.APP_FOLDER = getAppFolder(context);
+        this.networkHelper = new NetworkHelper(context);
+    }
+
+    public static String getAppFolder(Context context){
+        return context.getFilesDir().toString()+"/fusebulb/";
     }
 
     public static File getFile(String file_path) {
@@ -40,6 +49,9 @@ public class Downloader {
         try {
 
             if (!file.exists()) {
+
+                networkHelper.checkForInternetConnectivity();
+
                 URL url = new URL(HOST_NAME + file_path);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

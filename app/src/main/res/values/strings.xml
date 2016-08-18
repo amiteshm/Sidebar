@@ -25,4 +25,10 @@
     <string name="close_tour">close tour</string>
     <string name="fast_forward">fast_forward</string>
     <string name="rewind">rewind</string>
+    <string name="via_bluetooth">Bluetooth</string>
+    <string name="via_internet">Internet</string>
+    <string name="download_label">Download content via</string>
+    <string name="error_user_name">Please enter your name</string>
+    <string name="content_file_not_found">No content file found in your device. Please contact tour manager or choose Internet option.</string>
+    <string name="share_app_message">Hey! Share this cool app I have found.</string>
 </resources>

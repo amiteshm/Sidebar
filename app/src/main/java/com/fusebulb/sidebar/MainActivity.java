@@ -1,5 +1,6 @@
 package com.fusebulb.sidebar;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity
 
         userName = userSettings.getUserName(this);
         userLanguage = userSettings.getUserLanguage(this);
-        if(userName == null){
+        if(userName == null || userName.equals("")){
             Intent userSettingIntent= new Intent(this, UserSettings.class);
             startActivity(userSettingIntent);
         }
@@ -88,9 +89,12 @@ public class MainActivity extends AppCompatActivity
             Intent userSettingIntent= new Intent(this, UserSettings.class);
             startActivity(userSettingIntent);
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            shareIntent.setType("text/plain");
+            Resources rs = getResources();
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, rs.getString(R.string.share_app_message));
+            startActivity(shareIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

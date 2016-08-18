@@ -4,16 +4,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.media.MediaPlayer;
 import android.media.TimedText;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -21,24 +16,19 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.MediaController.MediaPlayerControl;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.os.Handler;
 
 import com.fusebulb.sidebar.Adapter.ClipListAdapter;
 import com.fusebulb.sidebar.Fragments.AudioController;
+import com.fusebulb.sidebar.Helpers.Downloader;
+import com.fusebulb.sidebar.Helpers.FileDownloader;
+import com.fusebulb.sidebar.Models.Clip;
 import com.fusebulb.sidebar.Parser.TourClipParser;
 
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -62,6 +52,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     private static Handler handler = new Handler();
     private TextView subtitlesView;
     private ImageView pictureInFocus, cameraBtn, mapBtn;
+    private ImageButton showPlaylistBtn;
     private static final String ACTION_SPLITTER = "##";
 
     @Override
@@ -69,17 +60,15 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_tour);
 
-
-        //actionListener = new ActionListener();
         subtitlesView = (TextView) findViewById(R.id.play_tour_subtitle_box);
         subtitlesView.setVisibility(View.GONE);
         pictureInFocus = (ImageView) findViewById(R.id.play_tour_picture_in_focus);
 
-        cameraBtn = (ImageView) findViewById(R.id.play_tour_openCamera_btn);
-        cameraBtn.setOnClickListener(this);
-
-        mapBtn = (ImageView) findViewById(R.id.play_tour_openMap_btn);
-        mapBtn.setOnClickListener(this);
+//        cameraBtn = (ImageView) findViewById(R.id.play_tour_openCamera_btn);
+//        cameraBtn.setOnClickListener(this);
+//
+//        mapBtn = (ImageView) findViewById(R.id.play_tour_openMap_btn);
+//        mapBtn.setOnClickListener(this);
 
 
         Bundle extras = getIntent().getExtras();
@@ -97,8 +86,9 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
 
         try {
             clipList = clipParser.get();
-            initializeView();
+
             openAudioControllerFragment();
+            initializeView();
 
             //songView.setAdapter(songAdpater);
         } catch (InterruptedException e) {
@@ -146,7 +136,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     };
 
     private String getAppFolder() {
-        return getFilesDir().toString() + "/";
+        return Downloader.getAppFolder(this);
     }
 
     private void setClipIndex(int clipIndex) {
@@ -179,7 +169,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void run() {
                     String text = timedText.getText();
-                    String[] components = text.split(ACTION_SPLITTER);
+                    String[] components = text.trim().split(ACTION_SPLITTER);
 
                     String action = components[0];
                     switch (action){
@@ -253,7 +243,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     // PlayTour UI Elements
 
     private void initializeView() {
-        showPlayListBtn = (ImageButton) findViewById(R.id.imageButton_playlist_play_tour);
+        showPlayListBtn = (ImageButton) findViewById(R.id.audioController_playlistBtn);
         if (showPlayListBtn != null) {
             showPlayListBtn.setOnClickListener(this);
         }
@@ -268,27 +258,29 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
             listViewDrawer.setAdapter(clipListAdapter);
             listViewDrawer.setOnItemClickListener(this);
         }
+
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.imageButton_playlist_play_tour:
+            case R.id.audioController_playlistBtn:
                 if (drawerLayoutPlayList != null && !drawerLayoutPlayList.isDrawerOpen(GravityCompat.END)) {
                     drawerLayoutPlayList.openDrawer(GravityCompat.END);
                 }
                 break;
-            case R.id.play_tour_openCamera_btn:
-                startActivity(new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE));
-                break;
-            case R.id.play_tour_openMap_btn:
-                Location loc = playTourService.getCurrentClipLocation();
-                String query= "http://maps.google.com/maps?daddr="+loc.getLongitude()+","+loc.getLatitude();
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse(query));
-                startActivity(intent);
-
-                break;
+//            case R.id.play_tour_openCamera_btn:
+//                startActivity(new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE));
+//                break;
+//            case R.id.play_tour_openMap_btn:
+//                Location loc = playTourService.getCurrentClipLocation();
+//                String query= "http://maps.google.com/maps?daddr="+loc.getLongitude()+","+loc.getLatitude();
+//                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+//                        Uri.parse(query));
+//                startActivity(intent);
+//
+//                break;
         }
     }
 

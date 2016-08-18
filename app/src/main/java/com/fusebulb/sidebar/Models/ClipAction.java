@@ -1,4 +1,4 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Models;
 
 import java.util.ArrayList;
 

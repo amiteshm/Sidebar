@@ -1,4 +1,6 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Models;
+
+import com.fusebulb.sidebar.Models.ClipAction;
 
 import java.io.File;
 

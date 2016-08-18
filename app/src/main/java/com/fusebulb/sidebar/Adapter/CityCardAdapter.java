@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.fusebulb.sidebar.City;
+import com.fusebulb.sidebar.Models.City;
 import com.fusebulb.sidebar.R;
 import com.fusebulb.sidebar.TourListActivity;
 import com.fusebulb.sidebar.UserSettings;
@@ -30,11 +30,13 @@ public class CityCardAdapter extends RecyclerView.Adapter<CityCardAdapter.ViewHo
     private List<City> cityList;
     private String languagePref;
 
+
     public CityCardAdapter(Context context, String languagePref, List<City> cityList)
     {
         this.context = context;
         this.languagePref = languagePref;
         this.cityList = cityList;
+
     }
 
     @Override

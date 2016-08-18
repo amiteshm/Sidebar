@@ -22,36 +22,36 @@
             <!--android:src="@mipmap/utah_mountain_1080x1920" />-->
 
 
-        <LinearLayout
-            android:id="@+id/linearLayout_buttons_play_tour_top"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_buttons_play_tour_top"
-            android:layout_alignParentTop="true"
-            android:background="@android:color/white"
-            android:elevation="@dimen/elevation_buttons_play_tour_top"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:weightSum="3">
-            <!--android:background="#00ff00"-->
+        <!--<LinearLayout-->
+            <!--android:id="@+id/linearLayout_buttons_play_tour_top"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/btn_size_regular"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:background="@android:color/white"-->
+            <!--android:elevation="@dimen/elevation_buttons_play_tour_top"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:weightSum="3">-->
+            <!--&lt;!&ndash;android:background="#00ff00"&ndash;&gt;-->
 
-            <ImageButton
-                android:id="@+id/play_tour_openMap_btn"
-                style="@style/buttons_play_tour_top"
-                android:contentDescription="@string/locate"
-                android:src="@drawable/ic_place_icon" />
+            <!--<ImageButton-->
+                <!--android:id="@+id/play_tour_openMap_btn"-->
+                <!--style="@style/buttons_play_tour_top"-->
+                <!--android:contentDescription="@string/locate"-->
+                <!--android:src="@drawable/ic_place_icon" />-->
 
-            <ImageButton
-                android:id="@+id/play_tour_openCamera_btn"
-                style="@style/buttons_play_tour_top"
-                android:contentDescription="@string/camera"
-                android:src="@drawable/ic_menu_camera" />
+            <!--<ImageButton-->
+                <!--android:id="@+id/play_tour_openCamera_btn"-->
+                <!--style="@style/buttons_play_tour_top"-->
+                <!--android:contentDescription="@string/camera"-->
+                <!--android:src="@drawable/ic_menu_camera" />-->
 
-            <ImageButton
-                android:id="@+id/imageButton_playlist_play_tour"
-                style="@style/buttons_play_tour_top"
-                android:contentDescription="@string/list_of_places_of_interest"
-                android:src="@drawable/ic_playlist_play" />
-        </LinearLayout>
+            <!--<ImageButton-->
+                <!--android:id="@+id/imageButton_playlist_play_tour"-->
+                <!--style="@style/buttons_play_tour_top"-->
+                <!--android:contentDescription="@string/list_of_places_of_interest"-->
+                <!--android:src="@drawable/ic_playlist_play" />-->
+        <!--</LinearLayout>-->
 
 
         <RelativeLayout
@@ -61,7 +61,6 @@
 
             <ImageView
                 android:id="@+id/play_tour_picture_in_focus"
-                android:layout_marginBottom="72dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
             <TextView

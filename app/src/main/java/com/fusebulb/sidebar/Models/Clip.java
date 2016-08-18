@@ -1,4 +1,4 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Models;
 
 
 import android.location.Location;
@@ -14,6 +14,7 @@ public class Clip {
     private String name;
     private int tour;
     private int order;
+    private String thumbnil;
     private String pictureSource;
     private String clipSource;
     private Location location;
@@ -32,6 +33,14 @@ public class Clip {
 
     public File getClipActionFile(){
         return this.actionFile;
+    }
+
+    public void setThumbnil(String file_path){
+        this.thumbnil = file_path;
+    }
+
+    public String getThumbnil(){
+        return this.thumbnil;
     }
 
     public String getActionFileSource(){

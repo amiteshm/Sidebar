@@ -1,57 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:orientation="vertical" >
+    android:paddingRight="16dp">
 
-    <EditText
-        android:id="@+id/user_name"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-
+    <ImageView
+        android:id="@+id/userSettings_Logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/name_hint" />
+        android:paddingTop="72dp"
+        android:src="@drawable/ic_arrow_forward" />
+
+    <RelativeLayout
+        android:id="@+id/userSettings_NameRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userSettings_Logo">
+
+        <TextView
+            android:id="@+id/userSettings_NameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+
+            android:text="Name"
+            android:textSize="@dimen/secondary_text_size" />
+
+        <EditText
+            android:id="@+id/userSettings_UserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="36dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/userSettings_NameLabel" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/userSettings_LanguageRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userSettings_NameRow"
+        >
+
+        <TextView
+            android:id="@+id/userSettings_LaguageLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="54dp"
+            android:gravity="left"
+            android:paddingBottom="@dimen/primary_text_top_padding"
+            android:text="@string/language_label"
+            android:textSize="@dimen/secondary_text_size" />
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/user_language"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/primary_text_left_right_padding">
+
+            <RadioButton
+                android:id="@+id/lang_en"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/english" />
+
+            <RadioButton
+                android:id="@+id/lang_hi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="12dp"
+                android:text="Hindi" />
+        </RadioGroup>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/userSettings_ContentPref"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userSettings_LanguageRow"
+        >
+
+        <TextView
+            android:id="@+id/userSettings_DownloadLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="54dp"
+            android:gravity="left"
+            android:paddingBottom="@dimen/primary_text_top_padding"
+            android:text="@string/download_label"
+            android:textSize="@dimen/secondary_text_size" />
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/download_pref"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="32dp"
+            android:gravity="center_horizontal"
+
+            android:orientation="vertical"
+            >
+
+            <RadioButton
+                android:id="@+id/via_internet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="12dp"
+                android:checked="true"
+                android:text="@string/via_internet" />
+
+            <RadioButton
+                android:id="@+id/via_bluetooth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/via_bluetooth" />
+
+
+        </RadioGroup>
+    </RelativeLayout>
 
     <TextView
-        android:layout_marginTop="16dp"
+        android:id="@+id/userSettings_ContentNotFoundError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/language_label"
-        android:textSize="18dp"
-        android:gravity="center"
-        />
-
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/user_language"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <RadioButton
-            android:id="@+id/lang_en"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/english"
-            android:checked="true"
-            />
-        <RadioButton
-            android:id="@+id/lang_hi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hindi"
-            />
-    </RadioGroup>
-
+        android:layout_below="@id/userSettings_ContentPref"
+        android:text="@string/content_file_not_found"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:visibility="gone"
+        android:textColor="#D8000C"
+        android:background="#FFBABA"/>
 
     <Button
         android:id="@+id/doneButton"
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/done"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
         android:background="@color/colorPrimary"
-        android:textColor="@color/btnText"
-        />
-</LinearLayout>
+        android:text="@string/done"
+        android:textColor="@color/btnText" />
+</RelativeLayout>

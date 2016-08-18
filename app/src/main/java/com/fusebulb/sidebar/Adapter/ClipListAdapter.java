@@ -1,16 +1,21 @@
 package com.fusebulb.sidebar.Adapter;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fusebulb.sidebar.Clip;
+import com.fusebulb.sidebar.Helpers.Downloader;
+import com.fusebulb.sidebar.Models.Clip;
 import com.fusebulb.sidebar.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -21,10 +26,13 @@ public class ClipListAdapter  extends BaseAdapter {
 
     private ArrayList<Clip> clips;
     private LayoutInflater clipInf;
+    private String APP_FOLDER;
 
     public ClipListAdapter(Context c, ArrayList<Clip> theClips) {
         clips = theClips;
         clipInf = LayoutInflater.from(c);
+        APP_FOLDER = Downloader.getAppFolder(c);
+
     }
 
     public int getCount() {
@@ -46,11 +54,15 @@ public class ClipListAdapter  extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = (LinearLayout) clipInf.inflate(R.layout.clip, parent, false);
+            convertView = (RelativeLayout) clipInf.inflate(R.layout.clip, parent, false);
         }
-        TextView songView = (TextView) convertView.findViewById(R.id.show_tour_drawer_clip_name);
+        TextView clipTitleView = (TextView) convertView.findViewById(R.id.playlist_clip_title);
+        ImageView thumbnilView = (ImageView) convertView.findViewById(R.id.playlist_clip_thumbnil);
         Clip currClip= clips.get(position);
-        songView.setText(currClip.getName());
+        clipTitleView .setText(currClip.getName());
+        File thumbnilFile = new File(APP_FOLDER, currClip.getThumbnil());
+        //thumbnilView.setImageBitmap(BitmapFactory.decodeFile(currClip.getThumbnil()));
+        thumbnilView.setImageURI(Uri.fromFile(thumbnilFile));
         convertView.setTag(position);
         return convertView;
     }

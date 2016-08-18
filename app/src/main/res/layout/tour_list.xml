@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tour_type"
-                android:background="@drawable/border_less_btn"
+                android:background="@drawable/btn_border_less"
                 android:drawableStart="@drawable/ic_direction"
                 android:drawableLeft="@drawable/ic_direction"
                 android:layout_marginLeft="16dp"
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/tour_distance"
                 android:layout_below="@id/tour_type"
-                android:background="@drawable/border_less_btn"
+                android:background="@drawable/btn_border_less"
                 android:paddingLeft="8dp"
                 android:drawableStart="@drawable/ic_preview"
                 android:drawableLeft="@drawable/ic_preview"
@@ -95,7 +95,7 @@
                 android:layout_below="@id/tour_type"
                 android:layout_alignParentRight="true"
                 android:padding="@dimen/action_padding"
-                android:background="@drawable/border_less_btn"
+                android:background="@drawable/btn_border_less"
                 android:drawableRight="@drawable/ic_show_more_arrow" />
 
             <Button
@@ -105,7 +105,7 @@
                 android:layout_below="@id/tour_type"
                 android:layout_alignParentRight="true"
                 android:padding="@dimen/action_padding"
-                android:background="@drawable/border_less_btn"
+                android:background="@drawable/btn_border_less"
                 android:drawableRight="@drawable/ic_show_less" />
 
             <TextView

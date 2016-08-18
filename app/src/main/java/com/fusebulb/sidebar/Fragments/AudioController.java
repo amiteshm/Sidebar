@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.fusebulb.sidebar.MainActivity;
@@ -20,7 +21,7 @@ public class AudioController extends Fragment implements View.OnClickListener {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     private View rootView;
-    private ImageView playBtn, exitBtn, pauseBtn;
+    private ImageView playBtn, exitBtn, showPlaylistBtn;
     private ImageView rewindBtn, fastForwardBtn;
     private PlayTourActivity activity;
 
@@ -42,9 +43,14 @@ public class AudioController extends Fragment implements View.OnClickListener {
         exitBtn.setOnClickListener(this);
         exitBtn.setVisibility(View.VISIBLE);
 
-        pauseBtn = (ImageView) rootView.findViewById(R.id.audioController_pauseBtn);
-        pauseBtn.setOnClickListener(this);
-        pauseBtn.setVisibility(View.GONE);
+        showPlaylistBtn = (ImageButton) rootView.findViewById(R.id.audioController_playlistBtn);
+        showPlaylistBtn.setOnClickListener(activity);
+
+
+
+//        pauseBtn = (ImageView) rootView.findViewById(R.id.audioController_pauseBtn);
+//        pauseBtn.setOnClickListener(this);
+//        pauseBtn.setVisibility(View.GONE);
 
 //        rewindBtn = (ImageView) rootView.findViewById(R.id.audioController_rewind);
 //        rewindBtn.setOnClickListener(this);
@@ -57,13 +63,13 @@ public class AudioController extends Fragment implements View.OnClickListener {
     }
 
     public void setPlayClip(){
-        playBtn.setVisibility(View.GONE);
-        pauseBtn.setVisibility(View.VISIBLE);
+        playBtn.setBackgroundResource(R.drawable.btn_paused_tour);
+        //pauseBtn.setVisibility(View.VISIBLE);
     }
 
     public void setPauseClip(){
-        pauseBtn.setVisibility(View.GONE);
-        playBtn.setVisibility(View.VISIBLE);
+        //pauseBtn.setVisibility(View.GONE);
+        playBtn.setBackgroundResource(R.drawable.btn_play_rounded);
     }
 
     @Override
@@ -79,12 +85,18 @@ public class AudioController extends Fragment implements View.OnClickListener {
 //                break;
 
             case R.id.audioController_playBtn:
-                activity.playClip();
+                if(activity.isClipPlaying()){
+                    activity.pauseClip();
+                }else{
+                    activity.playClip();
+                }
                 break;
 
-            case R.id.audioController_pauseBtn:
-                activity.pauseClip();
-                break;
+            case R.id.audioController_playlistBtn:
+
+//            case R.id.audioController_pauseBtn:
+//                activity.pauseClip();
+//                break;
 
 
 //                if (exitBtn.getVisibility() == View.VISIBLE) {

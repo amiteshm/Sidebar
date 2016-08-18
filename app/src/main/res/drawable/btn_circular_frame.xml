@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#7FF5D328" android:alpha="0.5" />
+
+    <!--<solid android:color="#F5D328" />-->
+    <size
+        android:width="@dimen/btn_size_regular"
+        android:height="@dimen/btn_size_regular" />
+</shape>

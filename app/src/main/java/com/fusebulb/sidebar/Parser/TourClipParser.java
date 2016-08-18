@@ -5,12 +5,12 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 
-import com.fusebulb.sidebar.ClickClipAction;
-import com.fusebulb.sidebar.Clip;
-import com.fusebulb.sidebar.ClipAction;
-import com.fusebulb.sidebar.Downloader;
-import com.fusebulb.sidebar.MapClipAction;
-import com.fusebulb.sidebar.MediaClipAction;
+import com.fusebulb.sidebar.Models.ClickClipAction;
+import com.fusebulb.sidebar.Models.Clip;
+import com.fusebulb.sidebar.Models.ClipAction;
+import com.fusebulb.sidebar.Helpers.Downloader;
+import com.fusebulb.sidebar.Models.MapClipAction;
+import com.fusebulb.sidebar.Models.MediaClipAction;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -37,7 +37,6 @@ public class TourClipParser extends Parser {
     private static final String XML_ACTION_END_TIME = "end_time";
     private static final String XML_ACTION_LAT = "lat";
     private static final String XML_ACTION_LON = "lon";
-
 
     private static final String TAG = "TourClipParser";
     private Context context;
@@ -145,6 +144,9 @@ public class TourClipParser extends Parser {
             } else if(tag.equals("caption")){
                 clip.setActionFileSource(readText(parser));
                 downloader.getFile(clip.getActionFileSource());
+            } else if(tag.equals("thumbnil")){
+                clip.setThumbnil(readText(parser));
+                downloader.getFile(clip.getThumbnil());
             }
             else {
                 skip(parser);

@@ -1,7 +1,9 @@
 package com.fusebulb.sidebar.Adapter;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
@@ -10,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
@@ -19,13 +20,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fusebulb.sidebar.FileDownloader;
+import com.fusebulb.sidebar.Helpers.Downloader;
+import com.fusebulb.sidebar.Helpers.FileDownloader;
+import com.fusebulb.sidebar.Parser.TourClipParser;
 import com.fusebulb.sidebar.PlayTourActivity;
 import com.fusebulb.sidebar.R;
-import com.fusebulb.sidebar.Tour;
+import com.fusebulb.sidebar.Models.Tour;
 import com.fusebulb.sidebar.UserSettings;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 String filePath = tour.getPreviewSource();
-                File mediaFile = new File(context.getCacheDir(), filePath);
+                File mediaFile = new File(Downloader.getAppFolder(context), filePath);
                 previewPlayer.playOrStopPreviewFor(holder.tourPreview, mediaFile);
             }
         });
@@ -107,6 +108,7 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
         holder.tourDirection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?&daddr=%f,%f (%s)", tour.getLocation().getLongitude(), tour.getLocation().getLatitude(), tour.getName());
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                 intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
@@ -189,16 +191,60 @@ public class TourCardAdapter extends RecyclerView.Adapter<TourCardAdapter.ViewHo
                 public void onClick(View v) {
                     int pos = getAdapterPosition();
                     Tour tour = tourList.get(pos);
-                    Intent intent = new Intent(context, PlayTourActivity.class);
-                    intent.putExtra("TOUR_SOURCE", tour.getTourSource());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
+
+                    //File tour_source = new File(context.getFilesDir(), tour.getTourSource());
+                    //if(tour_source.exists()){
+                        startPlayTourActivity(tour.getTourSource());
+                    //} else{
+                      //  createDownloadOptionPopup(tour.getTourSource());
+                    //}
+
                 }
             });
 
         }
     }
+
+    private void startPlayTourActivity(String tour_source){
+        Intent intent = new Intent(context, PlayTourActivity.class);
+        intent.putExtra("TOUR_SOURCE", tour_source);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    private void downloadViaInternet(String tour_source){
+        TourClipParser clipParser = new TourClipParser(context, tour_source);
+        clipParser.execute();
+        //startPlayTourActivity(tour_source);
+    }
+
+    private void downloadViaBluetooth(String tour_source){
+
+        //unzip the file
+    }
+
+//    private void createDownloadOptionPopup(final String tour_source){
+//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+//                context);
+//        alertDialogBuilder.setTitle("Choose the download method")
+//                .setItems(R.array.en_download_methods, new DialogInterface.OnClickListener(){
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i){
+//                        switch (i){
+//                            case 0:
+//                                downloadViaInternet(tour_source);
+//                            case 1:
+//                                downloadViaBluetooth(tour_source);
+//                                break;
+//                        }
+//                    }
+//                });
+//
+//        alertDialogBuilder.setCancelable(true);
+//        alertDialogBuilder.create();
+//        alertDialogBuilder.show();
+//    }
 
     private String getTourTypeString(Tour tour, String languagePref) {
         int tourType = tour.getTourType();

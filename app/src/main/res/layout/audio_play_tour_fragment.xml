@@ -11,37 +11,43 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:gravity="center_horizontal">
 
-        <ImageView
-            android:id="@+id/audioController_exitBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/stop_tour_btn"
-            android:contentDescription="@string/close_tour"
-            android:minHeight="0dp"
-            android:minWidth="0dp" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/audioController_playBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/marginBetween_playAndCloseTourButton"
-            android:layout_marginStart="@dimen/marginBetween_playAndCloseTourButton"
-            android:background="@drawable/play_rounded_btn"
+            android:background="@drawable/btn_play_rounded"
             android:contentDescription="@string/play"
             android:minHeight="0dp"
             android:minWidth="0dp" />
 
-
-        <ImageView
-            android:id="@+id/audioController_pauseBtn"
+        <ImageButton
+            android:id="@+id/audioController_exitBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/marginBetween_playAndCloseTourButton"
-            android:layout_marginStart="@dimen/marginBetween_playAndCloseTourButton"
-            android:background="@drawable/pause_rounded_btn"
-            android:contentDescription="@string/pause"
+            android:background="@drawable/btn_stop_tour"
+            android:contentDescription="@string/close_tour"
+            android:layout_toLeftOf="@id/audioController_playBtn"
+            android:layout_toStartOf="@id/audioController_playBtn"
+            android:layout_marginRight="16dp"
             android:minHeight="0dp"
             android:minWidth="0dp" />
+
+
+        <ImageButton
+            android:id="@+id/audioController_playlistBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_show_playlist"
+            android:contentDescription="@string/close_tour"
+            android:layout_toRightOf="@id/audioController_playBtn"
+            android:layout_toEndOf="@id/audioController_playBtn"
+            android:layout_marginLeft="16dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp" />
+
+
+        -->
 
 
         <!--<ImageView-->

@@ -1,28 +1,23 @@
 package com.fusebulb.sidebar;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.TimedText;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.fusebulb.sidebar.Models.Clip;
+import com.fusebulb.sidebar.Models.ClipAction;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by amiteshmaheshwari on 24/07/16.

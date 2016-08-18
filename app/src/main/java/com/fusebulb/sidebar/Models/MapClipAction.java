@@ -1,6 +1,8 @@
-package com.fusebulb.sidebar;
+package com.fusebulb.sidebar.Models;
 
 import android.location.Location;
+
+import com.fusebulb.sidebar.Models.ClipAction;
 
 /**
  * Created by amiteshmaheshwari on 22/07/16.
