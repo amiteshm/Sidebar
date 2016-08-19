@@ -23,8 +23,13 @@ public class Clip {
     private File actionFile;
     private ArrayList<ClipAction> clipActions;
 
+    private ArrayList<String> clipResources;
+
+
     public Clip() {
         clipActions = new ArrayList<ClipAction>();
+        clipResources = new ArrayList<String>();
+
     }
 
     public void setClipActionFile(File file) {
@@ -116,6 +121,14 @@ public class Clip {
 
     public void setClipActions(ArrayList<ClipAction> clipActionsList) {
         this.clipActions = clipActionsList;
+    }
+
+    public ArrayList<String> getClipResources(){
+        return this.clipResources;
+    }
+
+    public void setClipResouces(ArrayList<String> resourceList){
+        this.clipResources = resourceList;
     }
 
     public ArrayList<ClipAction> getClipActions() {

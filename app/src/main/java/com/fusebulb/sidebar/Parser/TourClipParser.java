@@ -2,6 +2,7 @@ package com.fusebulb.sidebar.Parser;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 import android.util.Xml;
 
@@ -117,6 +118,7 @@ public class TourClipParser extends Parser {
         return clipList;
     }
 
+
     public Clip readClip(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
 
         parser.require(XmlPullParser.START_TAG, NS, "clip");
@@ -124,7 +126,6 @@ public class TourClipParser extends Parser {
         clip.setId(parser.getAttributeValue(NS, XML_CLIP_ID));
         clip.setName(parser.getAttributeValue(NS, XML_CLIP_NAME));
 
-        int x =1;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -133,23 +134,22 @@ public class TourClipParser extends Parser {
             String tag = parser.getName();
             if (tag.equals("source")) {
                 clip.setClipSource(readText(parser));
-                downloader.getFile(clip.getClipSource());
+
             } else if (tag.equals("location")) {
                 clip.setLocation(parser.getAttributeValue(NS, XML_CLIP_LAT), parser.getAttributeValue(NS, XML_CLIP_LON));
                 parser.nextTag();
             } else if (tag.equals("picture")) {
                 clip.setPictureSource(readText(parser));
-                downloader.getFile(clip.getPictureSource());
+
             }
             else if(tag.equals("caption")){
                 clip.setActionFileSource(readText(parser));
-                downloader.getFile(clip.getActionFileSource());
+
             } else if(tag.equals("thumbnil")){
                 clip.setThumbnil(readText(parser));
                 downloader.getFile(clip.getThumbnil());
             }  else if (tag.equals("resources")) {
-                downloadClipResources(context, parser);
-                //clip.setClipActions(parseClipActions(context, parser));
+                clip.setClipResouces(parseClipResources(context, parser));
             }
             else {
                 skip(parser);
@@ -158,7 +158,8 @@ public class TourClipParser extends Parser {
         return clip;
     }
 
-    public void downloadClipResources(Context context, XmlPullParser parser) throws  XmlPullParserException, IOException {
+    public ArrayList<String> parseClipResources(Context context, XmlPullParser parser) throws  XmlPullParserException, IOException {
+        ArrayList<String> clipResouces = null;
         parser.require(XmlPullParser.START_TAG, NS, "resources");
         while(parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -166,123 +167,127 @@ public class TourClipParser extends Parser {
             }
             String name = parser.getName();
             if (name.equals("resource")) {
-                downloader.getFile(readText(parser));
+                if(clipResouces == null){
+                    clipResouces = new ArrayList<String>();
+                }
+                clipResouces.add(readText(parser));
             } else {
                 skip(parser);
             }
         }
+        return clipResouces;
     }
+//
+//    public ArrayList<ClipAction> parseClipActions(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
+//        ArrayList<ClipAction> clipActions = new ArrayList<ClipAction>();
+//        parser.require(XmlPullParser.START_TAG, NS, "actions");
+//        while (parser.next() != XmlPullParser.END_TAG) {
+//
+//            if (parser.getEventType() != XmlPullParser.START_TAG) {
+//                continue;
+//            }
+//            String name = parser.getName();
+//            if (name.equals("action")) {
+//                clipActions.add(readAction(context, parser));
+//            } else {
+//                skip(parser);
+//            }
+//        }
+//        return clipActions;
+//    }
 
-    public ArrayList<ClipAction> parseClipActions(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
-        ArrayList<ClipAction> clipActions = new ArrayList<ClipAction>();
-        parser.require(XmlPullParser.START_TAG, NS, "actions");
-        while (parser.next() != XmlPullParser.END_TAG) {
-
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            if (name.equals("action")) {
-                clipActions.add(readAction(context, parser));
-            } else {
-                skip(parser);
-            }
-        }
-        return clipActions;
-    }
-
-    public ClipAction readAction(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, NS, "action");
-        String action_type = parser.getAttributeValue(NS, XML_ACTION_TYPE);
-        ClipAction action;
-        switch (action_type) {
-            case ClipAction.MapClipAction:
-                action = parseMapClipAction(context, parser);
-                break;
-            case ClipAction.ClickClipAction:
-                action = parseClickClipAction(context, parser);
-                break;
-            case ClipAction.MediaClipAction:
-                action = parseMediaClipAction(context, parser);
-                break;
-            default:
-                action = new ClipAction();
-                break;
-        }
-        action.setActionType(action_type);
-        return action;
-    }
-
-    private ClickClipAction parseClickClipAction(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
-        ClickClipAction action = new ClickClipAction();
-
-        action.setId(parser.getAttributeValue(NS, XML_ACTION_ID));
-        action.setStartTime(parser.getAttributeValue(NS, XML_ACTION_START_TIME));
-        action.setEndTime(parser.getAttributeValue(NS, XML_ACTION_END_TIME));
-
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String tag = parser.getName();
-            if (tag.equals("title")) {
-                action.setTitle(readText(parser));
-            } else {
-                skip(parser);
-            }
-        }
-        return action;
-    }
+//    public ClipAction readAction(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
+//        parser.require(XmlPullParser.START_TAG, NS, "action");
+//        String action_type = parser.getAttributeValue(NS, XML_ACTION_TYPE);
+//        ClipAction action;
+//        switch (action_type) {
+//            case ClipAction.MapClipAction:
+//                action = parseMapClipAction(context, parser);
+//                break;
+//            case ClipAction.ClickClipAction:
+//                action = parseClickClipAction(context, parser);
+//                break;
+//            case ClipAction.MediaClipAction:
+//                action = parseMediaClipAction(context, parser);
+//                break;
+//            default:
+//                action = new ClipAction();
+//                break;
+//        }
+//        action.setActionType(action_type);
+//        return action;
+//    }
+//
+//    private ClickClipAction parseClickClipAction(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
+//        ClickClipAction action = new ClickClipAction();
+//
+//        action.setId(parser.getAttributeValue(NS, XML_ACTION_ID));
+//        action.setStartTime(parser.getAttributeValue(NS, XML_ACTION_START_TIME));
+//        action.setEndTime(parser.getAttributeValue(NS, XML_ACTION_END_TIME));
+//
+//        while (parser.next() != XmlPullParser.END_TAG) {
+//            if (parser.getEventType() != XmlPullParser.START_TAG) {
+//                continue;
+//            }
+//            String tag = parser.getName();
+//            if (tag.equals("title")) {
+//                action.setTitle(readText(parser));
+//            } else {
+//                skip(parser);
+//            }
+//        }
+//        return action;
+//    }
 
 
-    private MapClipAction parseMapClipAction(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
-        MapClipAction action = new MapClipAction();
+//    private MapClipAction parseMapClipAction(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
+//        MapClipAction action = new MapClipAction();
+//
+//        action.setId(parser.getAttributeValue(NS, XML_ACTION_ID));
+//        action.setStartTime(parser.getAttributeValue(NS, XML_ACTION_START_TIME));
+//        action.setEndTime(parser.getAttributeValue(NS, XML_ACTION_END_TIME));
+//
+//        while (parser.next() != XmlPullParser.END_TAG) {
+//            if (parser.getEventType() != XmlPullParser.START_TAG) {
+//                continue;
+//            }
+//
+//            String tag = parser.getName();
+//            if (tag.equals("title")) {
+//                action.setTitle(readText(parser));
+//            } else if (tag.equals("location")) {
+//                action.setLocation(parser.getAttributeValue(NS, XML_ACTION_LAT), parser.getAttributeValue(NS, XML_ACTION_LON));
+//                parser.nextTag();
+//            } else {
+//                skip(parser);
+//            }
+//        }
+//        return action;
+//    }
 
-        action.setId(parser.getAttributeValue(NS, XML_ACTION_ID));
-        action.setStartTime(parser.getAttributeValue(NS, XML_ACTION_START_TIME));
-        action.setEndTime(parser.getAttributeValue(NS, XML_ACTION_END_TIME));
-
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-
-            String tag = parser.getName();
-            if (tag.equals("title")) {
-                action.setTitle(readText(parser));
-            } else if (tag.equals("location")) {
-                action.setLocation(parser.getAttributeValue(NS, XML_ACTION_LAT), parser.getAttributeValue(NS, XML_ACTION_LON));
-                parser.nextTag();
-            } else {
-                skip(parser);
-            }
-        }
-        return action;
-    }
-
-    private MediaClipAction parseMediaClipAction(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
-        MediaClipAction action = new MediaClipAction();
-
-        action.setId(parser.getAttributeValue(NS, XML_ACTION_ID));
-        action.setStartTime(parser.getAttributeValue(NS, XML_ACTION_START_TIME));
-        action.setEndTime(parser.getAttributeValue(NS, XML_ACTION_END_TIME));
-
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-
-            String tag = parser.getName();
-            if (tag.equals("title")) {
-                action.setTitle(readText(parser));
-            } else if (tag.equals("source")) {
-                action.setMediaSource(readText(parser));
-                downloader.getFile(action.getMediaSource());
-            } else {
-                skip(parser);
-            }
-        }
-        return action;
-    }
+//    private MediaClipAction parseMediaClipAction(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
+//        MediaClipAction action = new MediaClipAction();
+//
+//        action.setId(parser.getAttributeValue(NS, XML_ACTION_ID));
+//        action.setStartTime(parser.getAttributeValue(NS, XML_ACTION_START_TIME));
+//        action.setEndTime(parser.getAttributeValue(NS, XML_ACTION_END_TIME));
+//
+//        while (parser.next() != XmlPullParser.END_TAG) {
+//            if (parser.getEventType() != XmlPullParser.START_TAG) {
+//                continue;
+//            }
+//
+//            String tag = parser.getName();
+//            if (tag.equals("title")) {
+//                action.setTitle(readText(parser));
+//            } else if (tag.equals("source")) {
+//                action.setMediaSource(readText(parser));
+//                downloader.getFile(action.getMediaSource());
+//            } else {
+//                skip(parser);
+//            }
+//        }
+//        return action;
+//    }
 
 }

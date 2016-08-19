@@ -32,6 +32,7 @@ import android.os.Handler;
 
 import com.fusebulb.sidebar.Adapter.ClipListAdapter;
 import com.fusebulb.sidebar.Fragments.AudioController;
+import com.fusebulb.sidebar.Helpers.ClipResourceDownloader;
 import com.fusebulb.sidebar.Helpers.Downloader;
 import com.fusebulb.sidebar.Helpers.FileDownloader;
 import com.fusebulb.sidebar.Models.Clip;
@@ -142,18 +143,6 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
         clipController.setEnabled(true);
     }
 
-    private File downloadFile(String file_path) {
-        File file = null;
-        try {
-            file = new FileDownloader(this).execute(file_path).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return file;
-    }
-
     private ServiceConnection mediaPlayerConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -179,8 +168,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     private void setClipIndex(int clipIndex) {
         // download the clip file and action files
         // show loading & change the ply
-        Clip clip = playTourService.setClipIndex(clipIndex);
-
+        playTourService.setClipIndex(clipIndex);
 
         //setSubTitles(playTourService.getMediaPlayer(), actionFile);
 
@@ -384,7 +372,6 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void seekTo(int i) {
-
         playTourService.seekPlayerTo(i);
     }
 

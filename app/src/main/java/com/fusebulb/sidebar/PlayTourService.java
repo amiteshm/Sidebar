@@ -12,16 +12,20 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
+import com.fusebulb.sidebar.Helpers.ClipResourceDownloader;
 import com.fusebulb.sidebar.Models.Clip;
 import com.fusebulb.sidebar.Models.ClipAction;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by amiteshmaheshwari on 24/07/16.
  */
+
+
 
 public class PlayTourService extends Service implements
          MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener{
@@ -144,8 +148,17 @@ public class PlayTourService extends Service implements
     }
 
 
-
     public Clip setClipIndex(int clipIndex) {
+        Clip clip = clipList.get(clipIndex);
+        ClipResourceDownloader resourceDownloader = new ClipResourceDownloader(context, clip);
+
+        try {
+            resourceDownloader.execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         this.currentClipIndex = clipIndex;
         return prepareClip();
     }
