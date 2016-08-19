@@ -86,9 +86,9 @@ public class AudioController extends Fragment implements View.OnClickListener {
 
             case R.id.audioController_playBtn:
                 if(activity.isClipPlaying()){
-                    activity.pauseClip();
+                    activity.pause();
                 }else{
-                    activity.playClip();
+                    activity.start();
                 }
                 break;
 

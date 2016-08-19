@@ -124,6 +124,7 @@ public class TourClipParser extends Parser {
         clip.setId(parser.getAttributeValue(NS, XML_CLIP_ID));
         clip.setName(parser.getAttributeValue(NS, XML_CLIP_NAME));
 
+        int x =1;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -139,14 +140,16 @@ public class TourClipParser extends Parser {
             } else if (tag.equals("picture")) {
                 clip.setPictureSource(readText(parser));
                 downloader.getFile(clip.getPictureSource());
-            } else if (tag.equals("actions")) {
-                clip.setClipActions(parseClipActions(context, parser));
-            } else if(tag.equals("caption")){
+            }
+            else if(tag.equals("caption")){
                 clip.setActionFileSource(readText(parser));
                 downloader.getFile(clip.getActionFileSource());
             } else if(tag.equals("thumbnil")){
                 clip.setThumbnil(readText(parser));
                 downloader.getFile(clip.getThumbnil());
+            }  else if (tag.equals("resources")) {
+                downloadClipResources(context, parser);
+                //clip.setClipActions(parseClipActions(context, parser));
             }
             else {
                 skip(parser);
@@ -155,8 +158,22 @@ public class TourClipParser extends Parser {
         return clip;
     }
 
-    public ArrayList<ClipAction> parseClipActions(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
+    public void downloadClipResources(Context context, XmlPullParser parser) throws  XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NS, "resources");
+        while(parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if (name.equals("resource")) {
+                downloader.getFile(readText(parser));
+            } else {
+                skip(parser);
+            }
+        }
+    }
 
+    public ArrayList<ClipAction> parseClipActions(Context context, XmlPullParser parser) throws XmlPullParserException, IOException {
         ArrayList<ClipAction> clipActions = new ArrayList<ClipAction>();
         parser.require(XmlPullParser.START_TAG, NS, "actions");
         while (parser.next() != XmlPullParser.END_TAG) {

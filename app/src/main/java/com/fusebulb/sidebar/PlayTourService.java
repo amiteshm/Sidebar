@@ -32,6 +32,7 @@ public class PlayTourService extends Service implements
     private Clip currentClip;
     private String APP_FOLDER;
 
+
     private boolean isPaused = false;
     private ArrayList<ClipAction> currentActionList;
     private int currentClipIndex;
@@ -64,6 +65,7 @@ public class PlayTourService extends Service implements
 
     private void playNext() {
         if (currentClipIndex + 1 < clipList.size()) {
+
             setClipIndex(currentClipIndex + 1);
             playClip();
         }
@@ -104,11 +106,19 @@ public class PlayTourService extends Service implements
             File clipFile = new File(APP_FOLDER, currentClip.getClipSource());
             File actionFile = new File(APP_FOLDER, currentClip.getActionFileSource());
 
-
             Uri trackUri = Uri.fromFile(clipFile);
             clipPlayer.setDataSource(getApplicationContext(), trackUri);
             clipPlayer.prepare();
+
             setSubTitles(clipPlayer, actionFile);
+            Intent setBackgroundImageIntent = new Intent(PlayTourActivity.ACTION_SET_IMAGE_IN_FOCUS);
+            setBackgroundImageIntent.putExtra(PlayTourActivity.KEY_FILE_PATH_IMAGE_IN_FOCUS, currentClip.getPictureSource());
+            sendBroadcast(setBackgroundImageIntent);
+
+
+//            Intent setTimedTextListenerIntent = new Intent(PlayTourActivity.ACTION_SET_TIMED_LISTENER);
+//            sendBroadcast(setTimedTextListenerIntent);
+
         } catch (Exception e) {
             Log.e("Music Service", "Error setting data source", e);
         }
@@ -151,13 +161,10 @@ public class PlayTourService extends Service implements
     }
 
     public void initClipPlayer() {
-
         if(clipPlayer != null){
             clipPlayer.release();
         }
-
         clipPlayer = new MediaPlayer();
-
         clipPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         clipPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         //clipPlayer.setOnPreparedListener(this);
@@ -188,7 +195,7 @@ public class PlayTourService extends Service implements
         return false;
     }
 
-    private void seekPlayerTo(int posn) {
+    public void seekPlayerTo(int posn) {
         clipPlayer.seekTo(posn);
     }
 
@@ -196,15 +203,11 @@ public class PlayTourService extends Service implements
         return clipPlayer.isPlaying();
     }
 
-    private int getPlayerDur() {
-        return clipPlayer.getDuration();
-    }
-
-    private int getPlayerCurrentPosition() {
+    public int getPlayerCurrentPosition() {
         return clipPlayer.getCurrentPosition();
     }
 
-    private int getClipDuration() {
+    public int getClipDuration() {
         return clipPlayer.getDuration();
     }
 
