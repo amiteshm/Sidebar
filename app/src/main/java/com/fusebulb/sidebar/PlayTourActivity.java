@@ -31,28 +31,26 @@ import android.widget.TextView;
 import android.os.Handler;
 
 import com.fusebulb.sidebar.Adapter.ClipListAdapter;
-import com.fusebulb.sidebar.Fragments.AudioController;
-import com.fusebulb.sidebar.Helpers.ClipResourceDownloader;
 import com.fusebulb.sidebar.Helpers.Downloader;
-import com.fusebulb.sidebar.Helpers.FileDownloader;
 import com.fusebulb.sidebar.Models.Clip;
 import com.fusebulb.sidebar.Parser.TourClipParser;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+
 import android.widget.MediaController.MediaPlayerControl;
 
 
 /**
  * Created by amiteshmaheshwari on 24/07/16.
  */
-public class PlayTourActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, MediaPlayer.OnTimedTextListener, MediaPlayerControl {
+public class PlayTourActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnTimedTextListener, MediaPlayerControl, AdapterView.OnItemClickListener {
 
     private static final String TAG = "PlayTourActivity";
     public static final String ACTION_SET_IMAGE_IN_FOCUS = "SET_IMAGE_IN_FOCUS";
     public static final String ACTION_SET_TIMED_LISTENER = "SET_TIMED_LISTENER";
-    public static final String KEY_FILE_PATH_IMAGE_IN_FOCUS = "FILE_PATH" ;
+    public static final String KEY_FILE_PATH_IMAGE_IN_FOCUS = "FILE_PATH";
 
     private static ArrayList<Clip> clipList;
     private PlayTourService playTourService;
@@ -65,51 +63,27 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     private MusicController clipController;
     private DrawerLayout drawerLayoutPlayList;
     private ListView listViewDrawer;
-    private AudioController audioController;
     private static Handler handler = new Handler();
 
     private TextView subtitlesView;
-    private ImageView pictureInFocus, cameraBtn, mapBtn;
-    private ImageButton showPlaylistBtn;
+    private ImageView pictureInFocus, playBtn, exitBtn, showPlaylistBtn;
     private static final String ACTION_SPLITTER = "##";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_tour);
 
-        subtitlesView = (TextView) findViewById(R.id.play_tour_subtitle_box);
-        subtitlesView.setVisibility(View.GONE);
-        pictureInFocus = (ImageView) findViewById(R.id.play_tour_picture_in_focus);
-
-//        cameraBtn = (ImageView) findViewById(R.id.play_tour_openCamera_btn);
-//        cameraBtn.setOnClickListener(this);
-//
-//        mapBtn = (ImageView) findViewById(R.id.play_tour_openMap_btn);
-//        mapBtn.setOnClickListener(this);
-
-
         Bundle extras = getIntent().getExtras();
-        String tourSourcePath = "";
-
-        if (extras != null) {
-            tourSourcePath = extras.getString("TOUR_SOURCE");
-            // and get whatever type user account id is
-        } else {
-            Log.e(TAG, "No tour source passed.");
-        }
-
-        TourClipParser clipParser = new TourClipParser(this, tourSourcePath);
-        clipParser.execute();
+        String tourSourcePath = extras.getString("TOUR_SOURCE");
 
         try {
+            TourClipParser clipParser = new TourClipParser(this, tourSourcePath);
+            clipParser.execute();
             clipList = clipParser.get();
-
-            openAudioControllerFragment();
             initializeView();
 
-
-            //songView.setAdapter(songAdpater);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -118,7 +92,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         if (dataUpdateReceiver == null) dataUpdateReceiver = new DataUpdateReceiver();
         IntentFilter intentFilter = new IntentFilter(ACTION_SET_IMAGE_IN_FOCUS);
@@ -126,7 +100,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         if (dataUpdateReceiver != null) unregisterReceiver(dataUpdateReceiver);
     }
@@ -136,12 +110,14 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
         start();
     }
 
-    private void setController(){
-        clipController = new MusicController(this);
-        clipController.setMediaPlayer(this);
-        clipController.setAnchorView(findViewById(R.id.play_tour_picture_in_focus));
-        clipController.setEnabled(true);
-    }
+//    private void setController(){
+//        clipController = new MusicController(this);
+//
+//        //clipController.setVisibility(View.INVISIBLE);
+//        clipController.setMediaPlayer(this);
+//        clipController.setAnchorView(findViewById(R.id.play_tour_picture_in_focus));
+//        clipController.setEnabled(true);
+//    }
 
     private ServiceConnection mediaPlayerConnection = new ServiceConnection() {
         @Override
@@ -161,6 +137,33 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
+
+    private void initializeView() {
+        subtitlesView = (TextView) findViewById(R.id.play_tour_subtitle_box);
+        subtitlesView.setVisibility(View.GONE);
+        pictureInFocus = (ImageView) findViewById(R.id.play_tour_picture_in_focus);
+
+
+        playBtn = (ImageView) findViewById(R.id.audioController_playBtn);
+        playBtn.setOnClickListener(this);
+        playBtn.setVisibility(View.VISIBLE);
+
+        exitBtn = (ImageView) findViewById(R.id.audioController_exitBtn);
+        exitBtn.setOnClickListener(this);
+        exitBtn.setVisibility(View.VISIBLE);
+        showPlaylistBtn = (ImageButton) findViewById(R.id.audioController_playlistBtn);
+
+        showPlaylistBtn.setOnClickListener(this);
+        drawerLayoutPlayList = (DrawerLayout) findViewById(R.id.drawerLayout_playlist_right_play_tour);
+        listViewDrawer = (ListView) findViewById(R.id.listView_rightDrawer);
+        if (listViewDrawer != null) {
+            ClipListAdapter clipListAdapter = new ClipListAdapter(this, clipList);
+            listViewDrawer.setAdapter(clipListAdapter);
+            listViewDrawer.setOnItemClickListener(this);
+        }
+
+    }
+
     private String getAppFolder() {
         return Downloader.getAppFolder(this);
     }
@@ -169,21 +172,8 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
         // download the clip file and action files
         // show loading & change the ply
         playTourService.setClipIndex(clipIndex);
-
         //setSubTitles(playTourService.getMediaPlayer(), actionFile);
-
     }
-
-    private int findTrackIndexFor(int mediaTrackType, MediaPlayer.TrackInfo[] trackInfo) {
-        int index = -1;
-        for (int i = 0; i < trackInfo.length; i++) {
-            if (trackInfo[i].getTrackType() == mediaTrackType) {
-                return i;
-            }
-        }
-        return index;
-    }
-
 
     @Override
     public void onTimedText(final MediaPlayer mp, final TimedText timedText) {
@@ -195,7 +185,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
                     String[] components = text.trim().split(ACTION_SPLITTER);
 
                     String action = components[0];
-                    switch (action){
+                    switch (action) {
                         case "Media":
                             setPictureInFocus(components[1]);
                             break;
@@ -213,11 +203,12 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void setActionText(String text){
+    public void setActionText(String text) {
         subtitlesView.setText(text);
         subtitlesView.setVisibility(View.VISIBLE);
         pictureInFocus.setImageAlpha(50);
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -244,7 +235,6 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
 //    public void pauseClip() {
 //        audioController.setPauseClip();
 //        playTourService.pauseClip();
@@ -260,35 +250,43 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    // PlayTour UI Elements
-
-    private void initializeView() {
-        showPlayListBtn = (ImageButton) findViewById(R.id.audioController_playlistBtn);
-        if (showPlayListBtn != null) {
-            showPlayListBtn.setOnClickListener(this);
+    public void openDrawer() {
+        if (drawerLayoutPlayList != null && !drawerLayoutPlayList.isDrawerOpen(GravityCompat.END)) {
+            drawerLayoutPlayList.openDrawer(GravityCompat.END);
         }
-
-        drawerLayoutPlayList = (DrawerLayout) findViewById(R.id.drawerLayout_playlist_right_play_tour);
-
-        listViewDrawer = (ListView) findViewById(R.id.listView_rightDrawer);
-
-        if (listViewDrawer != null) {
-            ClipListAdapter clipListAdapter = new ClipListAdapter(this, clipList);
-            listViewDrawer.setAdapter(clipListAdapter);
-            listViewDrawer.setOnItemClickListener(this);
-        }
-
-        setController();
     }
+
+    // PlayTour UI Elements
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.audioController_playlistBtn:
-                if (drawerLayoutPlayList != null && !drawerLayoutPlayList.isDrawerOpen(GravityCompat.END)) {
-                    drawerLayoutPlayList.openDrawer(GravityCompat.END);
+
+                if (isClipPlaying()) {
+                    fastForwardClip();
+                } else {
+                    openDrawer();
                 }
                 break;
+
+            case R.id.audioController_playBtn:
+                if (isClipPlaying()) {
+                    pause();
+                } else {
+                    start();
+                }
+                break;
+
+
+            case R.id.audioController_exitBtn:
+                if (isClipPlaying()) {
+                    rewindClip();
+                } else {
+                    stopClip();
+                }
+                break;
+
 //            case R.id.play_tour_openCamera_btn:
 //                startActivity(new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE));
 //                break;
@@ -312,6 +310,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
                 if (drawerLayoutPlayList != null && drawerLayoutPlayList.isDrawerOpen(GravityCompat.END)) {
                     drawerLayoutPlayList.closeDrawer(GravityCompat.END);
                 }
+
                 switch (position) {
                     case 0:// X for close
                         break;
@@ -328,10 +327,6 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
             super.onBackPressed();
     }
 
-    private void openAudioControllerFragment() {
-        audioController = new AudioController();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout_audioController, audioController).commit();
-    }
 
     @Override
     protected void onDestroy() {
@@ -349,14 +344,23 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void start() {
-        audioController.setPlayClip();
+
+        playBtn.setBackgroundResource(R.drawable.btn_paused_tour);
+        exitBtn.setBackgroundResource(R.drawable.btn_rewind_tour);
+        showPlaylistBtn.setBackgroundResource(R.drawable.btn_fforward_tour);
+
         playTourService.playClip();
-        clipController.show(0);
+        //clipController.show(0);
     }
 
     @Override
     public void pause() {
-        audioController.setPauseClip();
+        //audioController.setPauseClip();
+
+        playBtn.setBackgroundResource(R.drawable.btn_play_rounded);
+        exitBtn.setBackgroundResource(R.drawable.btn_stop_tour);
+        showPlaylistBtn.setBackgroundResource(R.drawable.btn_show_playlist);
+
         playTourService.pauseClip();
     }
 
@@ -397,7 +401,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public boolean canSeekForward() {
-        return true;
+        return false;
     }
 
     @Override
@@ -412,7 +416,7 @@ public class PlayTourActivity extends AppCompatActivity implements View.OnClickL
 
             String action = intent.getAction();
 
-            switch (action){
+            switch (action) {
                 case ACTION_SET_IMAGE_IN_FOCUS:
                     setPictureInFocus(intent.getStringExtra(KEY_FILE_PATH_IMAGE_IN_FOCUS));
                     playTourService.getMediaPlayer().setOnTimedTextListener(PlayTourActivity.this);

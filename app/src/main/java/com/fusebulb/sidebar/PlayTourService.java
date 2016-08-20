@@ -36,8 +36,6 @@ public class PlayTourService extends Service implements
     private Clip currentClip;
     private String APP_FOLDER;
 
-
-    private boolean isPaused = false;
     private ArrayList<ClipAction> currentActionList;
     private int currentClipIndex;
 
@@ -45,8 +43,8 @@ public class PlayTourService extends Service implements
 
     private static final int NOTIFY_ID = 1;
 
-    private static final int PLAYER_SEEK_FORWARD_TIME = 15;
-    private static final int PLAYER_SEEK_REWIND_TIME = 15;
+    private static final int PLAYER_SEEK_FORWARD_TIME = 10 * 1000;
+    private static final int PLAYER_SEEK_REWIND_TIME = 10* 1000;
 
 
     @Override
@@ -69,25 +67,14 @@ public class PlayTourService extends Service implements
 
     private void playNext() {
         if (currentClipIndex + 1 < clipList.size()) {
-
             setClipIndex(currentClipIndex + 1);
             playClip();
         }
     }
 
-
     public MediaPlayer getMediaPlayer(){
         return clipPlayer;
     }
-//    public void playClip() {
-//        if (!isPlayerPrepared) {
-//            prepareClip();
-//        }
-//    }
-
-//    public void stopClip() {
-//        clipPlayer.stop();
-//    }
 
     public void playClip() {
         clipPlayer.start();
@@ -97,10 +84,7 @@ public class PlayTourService extends Service implements
         clipPlayer.stop();
     }
 
-    public void pauseClip() {
-        clipPlayer.pause();
-        isPaused = true;
-    }
+    public void pauseClip() { clipPlayer.pause();}
 
     public Clip prepareClip() {
         initClipPlayer();
@@ -119,10 +103,6 @@ public class PlayTourService extends Service implements
             setBackgroundImageIntent.putExtra(PlayTourActivity.KEY_FILE_PATH_IMAGE_IN_FOCUS, currentClip.getPictureSource());
             sendBroadcast(setBackgroundImageIntent);
 
-
-//            Intent setTimedTextListenerIntent = new Intent(PlayTourActivity.ACTION_SET_TIMED_LISTENER);
-//            sendBroadcast(setTimedTextListenerIntent);
-
         } catch (Exception e) {
             Log.e("Music Service", "Error setting data source", e);
         }
@@ -134,7 +114,6 @@ public class PlayTourService extends Service implements
             player.addTimedTextSource(file.getAbsolutePath(),
                     MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
 
-            //player.addTimedTextSource(file.getAbsolutePath(), MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
             int textTrackIndex = findTrackIndexFor(
                     MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT, player.getTrackInfo());
             if (textTrackIndex >= 0) {
